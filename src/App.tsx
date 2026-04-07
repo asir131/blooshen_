@@ -29,6 +29,7 @@ import PromoterDashboard from "./pages/dashboard/PromoterDashboard.tsx";
 import PromotersLanding from "./pages/PromotersLanding.tsx";
 import AdminAffiliates from "./pages/AdminAffiliates.tsx";
 import SellYourCar from "./pages/SellYourCar.tsx";
+import AutoReport from "./pages/AutoReport.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import { useReferralDetection } from "@/hooks/useReferralTracking";
 
@@ -53,6 +54,7 @@ const AppContent = () => {
         <Route path="/events" element={<EventsAndMeetups />} />
         <Route path="/search" element={<SearchResults />} />
         <Route path="/sell" element={<SellYourCar />} />
+        <Route path="/auto-report" element={<AutoReport />} />
         <Route path="/promoters" element={<PromotersLanding />} />
         <Route path="/admin/affiliates" element={<AdminAffiliates />} />
         <Route path="/dashboard" element={<DashboardLayout />}>
