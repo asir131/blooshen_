@@ -28,7 +28,7 @@ const Footer = () => {
               <img src={autowurxLogo} alt="Autowurx" className="h-6" />
             </Link>
             <p className="text-sm text-muted-foreground font-body">
-              Find It. Fix It. Drive It. — the automotive marketplace built for enthusiasts, by enthusiasts.
+              Driving Traffic Forward — the automotive marketplace built for enthusiasts, by enthusiasts.
             </p>
           </div>
 

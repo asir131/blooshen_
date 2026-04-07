@@ -37,7 +37,7 @@ const HeroSection = () => {
 
         {/* Tagline */}
         <p className="font-heading text-lg md:text-2xl tracking-[0.2em] text-muted-foreground mb-10">
-          FIND IT. FIX IT. DRIVE IT.
+          DRIVING TRAFFIC FORWARD
         </p>
 
         {/* Search bar with category */}
