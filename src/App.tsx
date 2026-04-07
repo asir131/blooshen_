@@ -29,6 +29,7 @@ import PromoterDashboard from "./pages/dashboard/PromoterDashboard.tsx";
 import PromotersLanding from "./pages/PromotersLanding.tsx";
 import AdminAffiliates from "./pages/AdminAffiliates.tsx";
 import SellYourCar from "./pages/SellYourCar.tsx";
+import AutoReport from "./pages/AutoReport.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import { useReferralDetection } from "@/hooks/useReferralTracking";
 
