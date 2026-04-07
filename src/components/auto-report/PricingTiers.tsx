@@ -104,7 +104,7 @@ const PricingTiers = () => (
               {tier.features.map((f) => (
                 <li key={f.text} className={`flex items-center gap-2 text-xs ${f.included ? "text-foreground" : "text-muted-foreground/50"}`}>
                   {f.included ? (
-                    <Check size={14} className="text-green-500 shrink-0" />
+                    <Check size={14} className="text-[hsl(var(--success))] shrink-0" />
                   ) : (
                     <Lock size={14} className="shrink-0" />
                   )}
