@@ -1,64 +1,34 @@
-
-
-# Build "Sell Your Car" Page
+# Build Expert Profile Page
 
 ## Overview
-Create a full-featured `/sell` page with 7 sections, extract reusable components, and update the global accent color from orange to electric yellow.
-
-## Global Color Change
-Update `--cta` in `src/index.css` from `30 100% 50%` (orange) to `50 100% 50%` (electric yellow, matching `--primary`). Also update `--cta-foreground` to `0 0% 7%` (black text on yellow). This propagates everywhere `cta` is referenced — HowItWorks connector lines, HeroSection shortcut hover states, RentalsBanner, etc.
+Create a public-facing expert/broker profile page with 7 sections, dual view/edit modes, and placeholder data. Route: `/experts/:username`
 
 ## New Files
 
-### 1. `src/components/sell/VinPlateForm.tsx` (Reusable)
-The tabbed License Plate / VIN input card. Props for `onSubmit`, optional `compact` mode. Contains tab toggle, conditional state selector dropdown, input field, "Get My Cash Offer" CTA button, and "Sign In" link.
+### Data & Types
+1. **`src/data/mockExpertProfile.ts`** — Mock expert profile data object with all fields (bio, stats, social links, featured vehicles, articles, reviews, social feed posts)
 
-### 2. `src/components/sell/SellHero.tsx`
-- CSS carbon-fiber texture via repeating background gradient
-- Trust badge pills row
-- Headline + subheadline
-- Embeds `<VinPlateForm />`
+### Components (all in `src/components/expert-profile/`)
+2. **`ExpertHero.tsx`** — Banner + overlapping profile card with avatar, badge tier, rating, stats, bio, social links, contact buttons. Two-column desktop layout.
+3. **`SocialFeed.tsx`** — Platform-tabbed masonry grid of social post cards with placeholder data and TODO comments for API integration.
+4. **`FeaturedVehicles.tsx`** — 3-column grid of curated vehicle picks with "Expert Pick" badges, expert commentary, affiliate tracking comments, and "Ask Expert" action.
+5. **`ExpertArticles.tsx`** — Two-column layout: large featured article + 3 stacked small cards.
+6. **`ExpertReviews.tsx`** — Rating summary bar + review cards grid with breakdown bars.
+7. **`ReferralEarningsCTA.tsx`** — Yellow-background owner-only section with earnings stats (conditionally rendered).
+8. **`ExpertDirectoryCTA.tsx`** — Two-column public CTA for browsing experts or becoming one.
+9. **`AskExpertModal.tsx`** — Dialog modal for contacting expert about a specific vehicle.
 
-### 3. `src/components/sell/SellHowItWorks.tsx`
-- 3-step cards with dashed yellow connectors
-- Decorative phone mockup SVG below steps
-
-### 4. `src/components/sell/WhySellSection.tsx`
-- Two-column: heading left, stat callouts right
-- 6-card benefit grid below
-
-### 5. `src/components/sell/AffiliateShareBanner.tsx`
-- Yellow background, black text (inverted section)
-- Animated SVG illustration (car → share → nodes → dollar)
-
-### 6. `src/components/sell/SellerFAQ.tsx` (Reusable accordion)
-- Uses existing `Accordion` primitives from `src/components/ui/accordion.tsx`
-- Yellow chevron + left-border styling on open state
-- All 10 FAQ items from the spec
-
-### 7. `src/components/sell/ExpertGuidesStrip.tsx`
-- Horizontal scroll of 4 article cards
-- Matches NewsSection card styling
-
-### 8. `src/components/sell/BottomCTABanner.tsx`
-- Faint watermark logo, heading, CTA button (scrolls to top)
-- Trust icon row
-
-### 9. `src/pages/SellYourCar.tsx`
-- Assembles all sections with Navbar + Footer
-- Imports all sell/ components
+### Page
+10. **`src/pages/ExpertProfile.tsx`** — Assembles all sections, handles edit mode toggle, sets page title/meta.
 
 ## Modified Files
-
 | File | Change |
 |------|--------|
-| `src/index.css` | `--cta: 50 100% 50%`, `--cta-foreground: 0 0% 7%` |
-| `src/App.tsx` | Add route `/sell` → `SellYourCar` |
-| `src/components/HeroSection.tsx` | Update shortcut hover classes if they reference `cta` directly (already use `hover:border-cta` so the color swap handles it) |
+| `src/App.tsx` | Add route `/experts/:username` → `ExpertProfile` |
 
 ## Technical Notes
-- All animations use `@media (prefers-reduced-motion: reduce)` to disable motion
-- Mobile responsive: hero card full-width, benefit grid 1-col, steps stacked, guides horizontal scroll
-- Accordion uses existing Radix primitives — just styled with yellow accents
-- Phone mockup and affiliate animation are pure CSS/SVG, no images
-
+- Edit mode is local state toggle (no real persistence yet — mock only)
+- Owner detection uses a mock `isOwner` flag for now
+- Affiliate tracking via code comments (uses existing `fireConversionEvent` pattern)
+- All animations respect `prefers-reduced-motion`
+- Mobile responsive: stacked layouts, 2x2 stat grids, horizontal scroll where specified
