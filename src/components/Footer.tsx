@@ -1,15 +1,21 @@
+import { Link } from "react-router-dom";
 import autowurxLogo from "@/assets/autowurx-logo.png";
 
 const categoryLinks = [
-  "Cars for Sale",
-  "Parts & Accessories",
-  "Service Providers",
-  "Rentals",
-  "Reviews & Ratings",
-  "Events & Meetups",
+  { label: "Cars for Sale", to: "/cars-for-sale" },
+  { label: "Parts & Accessories", to: "/parts-accessories" },
+  { label: "Service Providers", to: "/service-providers" },
+  { label: "Rentals", to: "/rentals" },
+  { label: "Reviews & Ratings", to: "/reviews" },
+  { label: "Events & Meetups", to: "/events" },
 ];
 
-const companyLinks = ["About", "Contact", "Terms of Service", "Privacy Policy"];
+const companyLinks = [
+  { label: "About", to: "/about" },
+  { label: "Contact", to: "/contact" },
+  { label: "Terms of Service", to: "/terms" },
+  { label: "Privacy Policy", to: "/privacy" },
+];
 
 const Footer = () => {
   return (
@@ -18,11 +24,11 @@ const Footer = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Brand */}
           <div className="space-y-3">
-            <a href="/">
+            <Link to="/">
               <img src={autowurxLogo} alt="Autowurx" className="h-6" />
-            </a>
+            </Link>
             <p className="text-sm text-muted-foreground font-body">
-              Driving Traffic Forward — the automotive marketplace built for enthusiasts, by enthusiasts.
+              Find It. Fix It. Drive It. — the automotive marketplace built for enthusiasts, by enthusiasts.
             </p>
           </div>
 
@@ -31,10 +37,10 @@ const Footer = () => {
             <h4 className="font-heading text-sm font-bold tracking-wider text-foreground mb-4">CATEGORIES</h4>
             <ul className="space-y-2">
               {categoryLinks.map((link) => (
-                <li key={link}>
-                  <a href="#" className="text-sm text-muted-foreground font-body hover:text-primary transition-colors">
-                    {link}
-                  </a>
+                <li key={link.to}>
+                  <Link to={link.to} className="text-sm text-muted-foreground font-body hover:text-primary transition-colors">
+                    {link.label}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -45,16 +51,16 @@ const Footer = () => {
             <h4 className="font-heading text-sm font-bold tracking-wider text-foreground mb-4">COMPANY</h4>
             <ul className="space-y-2">
               {companyLinks.map((link) => (
-                <li key={link}>
-                  <a href="#" className="text-sm text-muted-foreground font-body hover:text-primary transition-colors">
-                    {link}
-                  </a>
+                <li key={link.to}>
+                  <Link to={link.to} className="text-sm text-muted-foreground font-body hover:text-primary transition-colors">
+                    {link.label}
+                  </Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Newsletter placeholder */}
+          {/* Stay connected */}
           <div>
             <h4 className="font-heading text-sm font-bold tracking-wider text-foreground mb-4">STAY CONNECTED</h4>
             <p className="text-sm text-muted-foreground font-body">
