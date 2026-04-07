@@ -1,5 +1,6 @@
 import { ShieldCheck, Banknote, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import rentalsBg from "@/assets/rentals-bg.jpg";
 
 const benefits = [
@@ -39,7 +40,9 @@ const RentalsBanner = () => {
             })}
           </div>
 
-          <Button size="lg">Browse Rentals</Button>
+          <Button size="lg" asChild>
+            <Link to="/rentals">Browse Rentals</Link>
+          </Button>
         </div>
       </div>
     </section>

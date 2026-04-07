@@ -1,8 +1,9 @@
-import { Search } from "lucide-react";
+import { Search, Car, Gavel, FileSearch, DollarSign } from "lucide-react";
 import autowurxLogo from "@/assets/autowurx-logo.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import heroBg from "@/assets/hero-bg.jpg";
+import { Link } from "react-router-dom";
 
 const categories = [
   "All Categories",
@@ -12,6 +13,13 @@ const categories = [
   "Rentals",
   "Reviews & Ratings",
   "Events & Meetups",
+];
+
+const shortcuts = [
+  { label: "Sell Your Car", icon: Car, href: "/sell" },
+  { label: "Auctions", icon: Gavel, href: "/auctions" },
+  { label: "Auto Report", icon: FileSearch, href: "/auto-report" },
+  { label: "Ca$h Deals", icon: DollarSign, href: "/cash-deals" },
 ];
 
 const HeroSection = () => {
@@ -28,8 +36,8 @@ const HeroSection = () => {
         <img src={autowurxLogo} alt="Autowurx" className="h-12 md:h-16 mb-4" />
 
         {/* Tagline */}
-        <p className="font-heading text-lg md:text-xl tracking-[0.25em] text-muted-foreground mb-10">
-          DRIVING TRAFFIC FORWARD
+        <p className="font-heading text-lg md:text-2xl tracking-[0.2em] text-muted-foreground mb-10">
+          FIND IT. FIX IT. DRIVE IT.
         </p>
 
         {/* Search bar with category */}
@@ -45,9 +53,28 @@ const HeroSection = () => {
           </div>
         </div>
 
-        <Button size="lg" className="text-base">
-          Browse All Listings
+        <Button size="lg" className="text-base mb-8" asChild>
+          <Link to="/cars-for-sale">Browse All Listings</Link>
         </Button>
+
+        {/* Quick Shortcut Tiles */}
+        <div className="flex gap-3 overflow-x-auto pb-2 w-full max-w-lg justify-center">
+          {shortcuts.map((s) => {
+            const Icon = s.icon;
+            return (
+              <Link
+                key={s.label}
+                to={s.href}
+                className="group flex flex-col items-center justify-center gap-1.5 w-[90px] h-[72px] shrink-0 rounded-xl border border-border/50 bg-background/40 backdrop-blur-sm transition-all duration-200 hover:border-cta hover:bg-background/60 hover:scale-105"
+              >
+                <Icon className="h-6 w-6 text-foreground transition-colors group-hover:text-cta" />
+                <span className="text-[11px] font-heading font-bold text-foreground leading-tight text-center">
+                  {s.label}
+                </span>
+              </Link>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
