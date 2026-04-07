@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Autowurx Design System */
+    --font-heading: 'Barlow Condensed', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+
+    /* Deep charcoal background */
+    --background: 0 0% 10%;
+    --foreground: 0 0% 100%;
+
+    /* Card surfaces — medium gray #2E2E2E */
+    --card: 0 0% 18%;
+    --card-foreground: 0 0% 100%;
+
+    --popover: 0 0% 14%;
+    --popover-foreground: 0 0% 100%;
+
+    /* Primary — electric yellow */
+    --primary: 50 100% 50%;
+    --primary-foreground: 0 0% 7%;
+
+    /* Secondary — charcoal lighter */
+    --secondary: 0 0% 22%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 0 0% 16%;
+    --muted-foreground: 0 0% 55%;
+
+    --accent: 50 100% 50%;
+    --accent-foreground: 0 0% 7%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 142 71% 45%;
+    --cta: 30 100% 50%;
+    --cta-foreground: 0 0% 100%;
+    --border: 0 0% 24%;
+    --input: 0 0% 24%;
+    --ring: 50 100% 50%;
+
+    --radius: 0.375rem;
+
+    --sidebar-background: 0 0% 8%;
+    --sidebar-foreground: 0 0% 90%;
+    --sidebar-primary: 50 100% 50%;
+    --sidebar-primary-foreground: 0 0% 7%;
+    --sidebar-accent: 0 0% 14%;
+    --sidebar-accent-foreground: 0 0% 90%;
+    --sidebar-border: 0 0% 20%;
+    --sidebar-ring: 50 100% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+}
