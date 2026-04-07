@@ -58,6 +58,7 @@ const AppContent = () => {
         <Route path="/auto-report" element={<AutoReport />} />
         <Route path="/promoters" element={<PromotersLanding />} />
         <Route path="/admin/affiliates" element={<AdminAffiliates />} />
+        <Route path="/experts/:username" element={<ExpertProfile />} />
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<MyListings />} />
           <Route path="rentals" element={<MyRentals />} />
