@@ -31,6 +31,7 @@ import AdminAffiliates from "./pages/AdminAffiliates.tsx";
 import SellYourCar from "./pages/SellYourCar.tsx";
 import AutoReport from "./pages/AutoReport.tsx";
 import ExpertProfile from "./pages/ExpertProfile.tsx";
+import CashDeals from "./pages/CashDeals.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import { useReferralDetection } from "@/hooks/useReferralTracking";
 
@@ -56,6 +57,7 @@ const AppContent = () => {
         <Route path="/search" element={<SearchResults />} />
         <Route path="/sell" element={<SellYourCar />} />
         <Route path="/auto-report" element={<AutoReport />} />
+        <Route path="/cash-deals" element={<CashDeals />} />
         <Route path="/promoters" element={<PromotersLanding />} />
         <Route path="/admin/affiliates" element={<AdminAffiliates />} />
         <Route path="/experts/:username" element={<ExpertProfile />} />
