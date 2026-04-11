@@ -2,15 +2,23 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useCountdown } from "@/hooks/useCountdown";
 import { mockBidHistory } from "@/data/mockAuctions";
-import { X, Copy, Share2 } from "lucide-react";
+import { X, Copy, Share2, Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import type { Auction } from "@/data/mockAuctions";
 
-// TODO: Subscribe to Supabase Realtime channel
-// channel: `auction:${auction.id}`
-// Events: bid_placed, auction_ended, reserve_met, outbid_notification
-// Update: current_bid, bid_count, time_remaining, bid_history
+// ============================================
+// REAL-TIME BIDDING — FUTURE INTEGRATION
+// ============================================
+// 1. Supabase Realtime channels per auction
+//    channel: `auction:${auctionId}`
+//    Events: bid_placed | outbid | reserve_met | auction_ended | watcher_count_update
+// 2. Bid submission: POST /api/auctions/bid
+//    Body: { auction_id, amount, user_id }
+//    Returns: { success, new_bid, is_highest_bidder }
+// 3. Auto-bid engine runs server-side — triggers on each new bid_placed event
+// 4. WebSocket fallback: use Supabase Realtime with postgres_changes on bids table
+// ============================================
 
 interface Props {
   auction: Auction;
@@ -39,10 +47,10 @@ const AuctionDetailModal = ({ auction: a, onClose }: Props) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/90 backdrop-blur-sm p-4" onClick={onClose}>
       <div
-        className="w-full max-w-[900px] max-h-[90vh] overflow-y-auto bg-[#1a1a1a] border border-primary rounded-2xl"
+        className="w-full max-w-[900px] max-h-[90vh] overflow-y-auto bg-[hsl(0_0%_10%)] border border-primary rounded-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="sticky top-0 z-10 flex justify-end p-3 bg-[#1a1a1a]/90 backdrop-blur">
+        <div className="sticky top-0 z-10 flex justify-end p-3 bg-[hsl(0_0%_10%)]/90 backdrop-blur">
           <button onClick={onClose} className="text-primary hover:text-foreground p-1"><X className="w-6 h-6" /></button>
         </div>
 
@@ -190,5 +198,3 @@ const AuctionDetailModal = ({ auction: a, onClose }: Props) => {
 };
 
 export default AuctionDetailModal;
-
-import { Heart } from "lucide-react";
