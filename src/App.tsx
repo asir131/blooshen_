@@ -32,6 +32,7 @@ import SellYourCar from "./pages/SellYourCar.tsx";
 import AutoReport from "./pages/AutoReport.tsx";
 import ExpertProfile from "./pages/ExpertProfile.tsx";
 import CashDeals from "./pages/CashDeals.tsx";
+import Auctions from "./pages/Auctions.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import { useReferralDetection } from "@/hooks/useReferralTracking";
 
