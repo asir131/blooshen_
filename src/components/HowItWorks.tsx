@@ -145,7 +145,7 @@ const HowItWorks = () => {
             className="bg-cta text-cta-foreground hover:bg-cta/90 text-base font-bold px-10 py-6 rounded-lg transition-transform hover:scale-105"
             asChild
           >
-            <Link to="/cars-for-sale">Get Started</Link>
+            <Link to="/find-my-broker">Get Started</Link>
           </Button>
         </div>
       </div>
