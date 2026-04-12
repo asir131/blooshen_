@@ -34,6 +34,7 @@ import ExpertProfile from "./pages/ExpertProfile.tsx";
 import CashDeals from "./pages/CashDeals.tsx";
 import Auctions from "./pages/Auctions.tsx";
 import FindMyBroker from "./pages/FindMyBroker.tsx";
+import BrokerApply from "./pages/BrokerApply.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import { useReferralDetection } from "@/hooks/useReferralTracking";
 
@@ -64,6 +65,7 @@ const AppContent = () => {
         <Route path="/find-my-broker" element={<FindMyBroker />} />
         <Route path="/promoters" element={<PromotersLanding />} />
         <Route path="/admin/affiliates" element={<AdminAffiliates />} />
+        <Route path="/experts/apply/*" element={<BrokerApply />} />
         <Route path="/experts/:username" element={<ExpertProfile />} />
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<MyListings />} />
