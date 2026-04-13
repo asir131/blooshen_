@@ -28,6 +28,7 @@ import Affiliates from "./pages/dashboard/Affiliates.tsx";
 import PromoterDashboard from "./pages/dashboard/PromoterDashboard.tsx";
 import PromotersLanding from "./pages/PromotersLanding.tsx";
 import AdminAffiliates from "./pages/AdminAffiliates.tsx";
+import AdminBrokers from "./pages/AdminBrokers.tsx";
 import SellYourCar from "./pages/SellYourCar.tsx";
 import AutoReport from "./pages/AutoReport.tsx";
 import ExpertProfile from "./pages/ExpertProfile.tsx";
@@ -65,6 +66,7 @@ const AppContent = () => {
         <Route path="/find-my-broker" element={<FindMyBroker />} />
         <Route path="/promoters" element={<PromotersLanding />} />
         <Route path="/admin/affiliates" element={<AdminAffiliates />} />
+        <Route path="/admin/brokers" element={<AdminBrokers />} />
         <Route path="/experts/apply/*" element={<BrokerApply />} />
         <Route path="/experts/:username" element={<ExpertProfile />} />
         <Route path="/dashboard" element={<DashboardLayout />}>
