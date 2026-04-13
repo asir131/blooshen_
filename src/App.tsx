@@ -66,6 +66,7 @@ const AppContent = () => {
         <Route path="/find-my-broker" element={<FindMyBroker />} />
         <Route path="/promoters" element={<PromotersLanding />} />
         <Route path="/admin/affiliates" element={<AdminAffiliates />} />
+        <Route path="/admin/brokers" element={<AdminBrokers />} />
         <Route path="/experts/apply/*" element={<BrokerApply />} />
         <Route path="/experts/:username" element={<ExpertProfile />} />
         <Route path="/dashboard" element={<DashboardLayout />}>
