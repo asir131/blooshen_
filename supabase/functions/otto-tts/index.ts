@@ -55,10 +55,11 @@ serve(async (req) => {
     if (!ttsResp.ok || !ttsResp.body) {
       const errText = await ttsResp.text();
       console.error("ElevenLabs error", ttsResp.status, errText);
-      return new Response(JSON.stringify({ error: "TTS failed" }), {
-        status: 502,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      // Return 200 + fallback flag so client silently skips voice instead of crashing
+      return new Response(
+        JSON.stringify({ error: "TTS_UNAVAILABLE", fallback: true }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
     }
 
     return new Response(ttsResp.body, {
@@ -71,8 +72,11 @@ serve(async (req) => {
   } catch (e) {
     console.error("otto-tts error:", e);
     return new Response(
-      JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      JSON.stringify({
+        error: e instanceof Error ? e.message : "Unknown error",
+        fallback: true,
+      }),
+      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   }
 });
