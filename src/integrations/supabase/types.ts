@@ -195,6 +195,69 @@ export type Database = {
           },
         ]
       }
+      experts: {
+        Row: {
+          bio: string | null
+          city: string | null
+          created_at: string
+          id: string
+          is_active: boolean | null
+          is_verified: boolean | null
+          name: string
+          photo_url: string | null
+          rating: number | null
+          response_time_hours: number | null
+          review_count: number | null
+          specialties: string[] | null
+          state: string | null
+          tagline: string | null
+          updated_at: string
+          user_id: string | null
+          username: string | null
+          zip: string | null
+        }
+        Insert: {
+          bio?: string | null
+          city?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          is_verified?: boolean | null
+          name: string
+          photo_url?: string | null
+          rating?: number | null
+          response_time_hours?: number | null
+          review_count?: number | null
+          specialties?: string[] | null
+          state?: string | null
+          tagline?: string | null
+          updated_at?: string
+          user_id?: string | null
+          username?: string | null
+          zip?: string | null
+        }
+        Update: {
+          bio?: string | null
+          city?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          is_verified?: boolean | null
+          name?: string
+          photo_url?: string | null
+          rating?: number | null
+          response_time_hours?: number | null
+          review_count?: number | null
+          specialties?: string[] | null
+          state?: string | null
+          tagline?: string | null
+          updated_at?: string
+          user_id?: string | null
+          username?: string | null
+          zip?: string | null
+        }
+        Relationships: []
+      }
       leads: {
         Row: {
           created_at: string
@@ -254,6 +317,168 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      otto_conversations: {
+        Row: {
+          broker_handoff_triggered: boolean | null
+          content: string
+          conversation_id: string
+          created_at: string
+          id: string
+          intent_signal: boolean | null
+          listing_context_id: string | null
+          listing_context_type: string | null
+          page_context: string | null
+          role: string
+          session_id: string
+          user_id: string | null
+          voice_used: boolean | null
+        }
+        Insert: {
+          broker_handoff_triggered?: boolean | null
+          content: string
+          conversation_id: string
+          created_at?: string
+          id?: string
+          intent_signal?: boolean | null
+          listing_context_id?: string | null
+          listing_context_type?: string | null
+          page_context?: string | null
+          role: string
+          session_id: string
+          user_id?: string | null
+          voice_used?: boolean | null
+        }
+        Update: {
+          broker_handoff_triggered?: boolean | null
+          content?: string
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          intent_signal?: boolean | null
+          listing_context_id?: string | null
+          listing_context_type?: string | null
+          page_context?: string | null
+          role?: string
+          session_id?: string
+          user_id?: string | null
+          voice_used?: boolean | null
+        }
+        Relationships: []
+      }
+      otto_feedback: {
+        Row: {
+          comment: string | null
+          conversation_id: string
+          created_at: string
+          id: string
+          message_id: string | null
+          rating: number | null
+          session_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          comment?: string | null
+          conversation_id: string
+          created_at?: string
+          id?: string
+          message_id?: string | null
+          rating?: number | null
+          session_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          comment?: string | null
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          message_id?: string | null
+          rating?: number | null
+          session_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      otto_preferences: {
+        Row: {
+          budget_max: number | null
+          budget_min: number | null
+          deal_type_preference: string | null
+          id: string
+          preferred_body_styles: string[] | null
+          preferred_location: string | null
+          preferred_makes: string[] | null
+          preferred_payment: string[] | null
+          saved_topics: string[] | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          budget_max?: number | null
+          budget_min?: number | null
+          deal_type_preference?: string | null
+          id?: string
+          preferred_body_styles?: string[] | null
+          preferred_location?: string | null
+          preferred_makes?: string[] | null
+          preferred_payment?: string[] | null
+          saved_topics?: string[] | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          budget_max?: number | null
+          budget_min?: number | null
+          deal_type_preference?: string | null
+          id?: string
+          preferred_body_styles?: string[] | null
+          preferred_location?: string | null
+          preferred_makes?: string[] | null
+          preferred_payment?: string[] | null
+          saved_topics?: string[] | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      otto_subscriptions: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          id: string
+          plan: string
+          started_at: string | null
+          status: string
+          stripe_session_id: string | null
+          stripe_subscription_id: string | null
+          trial_ends_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          plan: string
+          started_at?: string | null
+          status?: string
+          stripe_session_id?: string | null
+          stripe_subscription_id?: string | null
+          trial_ends_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          plan?: string
+          started_at?: string | null
+          status?: string
+          stripe_session_id?: string | null
+          stripe_subscription_id?: string | null
+          trial_ends_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
       }
       payout_history: {
         Row: {
