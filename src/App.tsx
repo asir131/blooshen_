@@ -37,7 +37,9 @@ import Auctions from "./pages/Auctions.tsx";
 import FindMyBroker from "./pages/FindMyBroker.tsx";
 import BrokerApply from "./pages/BrokerApply.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import OttoLanding from "./pages/OttoLanding.tsx";
 import { useReferralDetection } from "@/hooks/useReferralTracking";
+import { OttoProvider } from "@/components/otto/OttoProvider";
 
 const queryClient = new QueryClient();
 
@@ -65,6 +67,7 @@ const AppContent = () => {
         <Route path="/auctions" element={<Auctions />} />
         <Route path="/find-my-broker" element={<FindMyBroker />} />
         <Route path="/promoters" element={<PromotersLanding />} />
+        <Route path="/otto" element={<OttoLanding />} />
         <Route path="/admin/affiliates" element={<AdminAffiliates />} />
         <Route path="/admin/brokers" element={<AdminBrokers />} />
         <Route path="/experts/apply/*" element={<BrokerApply />} />
@@ -85,6 +88,7 @@ const AppContent = () => {
         <Route path="*" element={<NotFound />} />
       </Routes>
       {!isDashboard && <MobileBottomNav />}
+      <OttoProvider />
     </>
   );
 };
