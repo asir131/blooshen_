@@ -81,6 +81,9 @@ export function OttoProvider() {
         body: JSON.stringify({ text }),
       });
       if (!resp.ok) return;
+      // If TTS provider failed, edge function returns JSON {fallback:true} — skip silently
+      const contentType = resp.headers.get("content-type") || "";
+      if (!contentType.startsWith("audio/")) return;
       const blob = await resp.blob();
       const url = URL.createObjectURL(blob);
       if (audioRef.current) {
