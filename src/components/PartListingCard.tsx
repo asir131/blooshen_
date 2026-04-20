@@ -1,9 +1,9 @@
-import { useState } from "react";
 import type { PartListing } from "@/data/mockParts";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { MapPin, Heart } from "lucide-react";
+import { MapPin } from "lucide-react";
 import ShareEarnButton from "@/components/ShareEarnButton";
+import WatchlistToggle from "@/components/WatchlistToggle";
 
 interface Props {
   listing: PartListing;
@@ -11,8 +11,6 @@ interface Props {
 }
 
 const PartListingCard = ({ listing, viewMode }: Props) => {
-  const [wishlisted, setWishlisted] = useState(false);
-
   const conditionVariant = (() => {
     switch (listing.condition) {
       case "New": case "OEM": return "default" as const;
@@ -21,15 +19,7 @@ const PartListingCard = ({ listing, viewMode }: Props) => {
     }
   })();
 
-  const heartBtn = (
-    <button
-      onClick={(e) => { e.preventDefault(); setWishlisted(!wishlisted); }}
-      className={`p-1.5 rounded-md transition-colors ${wishlisted ? "text-primary" : "text-muted-foreground hover:text-primary"}`}
-      aria-label="Add to Watchlist"
-    >
-      <Heart className={`h-4 w-4 ${wishlisted ? "fill-primary" : ""}`} />
-    </button>
-  );
+  const heartBtn = <WatchlistToggle listingId={String(listing.id)} category="parts_accessories" />;
 
   if (viewMode === "list") {
     return (

@@ -8,6 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import ShareEarnButton from "@/components/ShareEarnButton";
 import SalesAgentChat from "@/components/SalesAgentChat";
+import ReviewForm from "@/components/ReviewForm";
+import ReviewList from "@/components/ReviewList";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { mockRentals } from "@/data/mockRentals";
@@ -252,28 +254,11 @@ const RentalDetail = () => {
                 </div>
               </div>
 
-              {/* Review cards */}
-              <div className="space-y-4 mb-4">
-                {d.reviews.map((rev) => {
-                  const revStars = Array.from({ length: 5 }, (_, i) => i < rev.rating);
-                  return (
-                    <div key={rev.id} className="rounded-lg border border-border bg-card p-4">
-                      <div className="flex items-center gap-3 mb-2">
-                        <img src={rev.renterAvatar} alt={rev.renterName} className="h-9 w-9 rounded-full object-cover" />
-                        <div>
-                          <p className="font-heading text-sm font-bold text-foreground">{rev.renterName}</p>
-                          <div className="flex items-center gap-1">
-                            {revStars.map((f, i) => <Star key={i} className={`h-3 w-3 ${f ? "fill-primary text-primary" : "text-muted-foreground"}`} />)}
-                            <span className="text-[10px] text-muted-foreground font-body ml-1">{format(new Date(rev.date), "MMM d, yyyy")}</span>
-                          </div>
-                        </div>
-                      </div>
-                      <p className="text-sm text-muted-foreground font-body">{rev.text}</p>
-                    </div>
-                  );
-                })}
+              {/* Live reviews + form */}
+              <div className="space-y-4">
+                <ReviewList listingId={String(listing.id)} category="rentals" />
+                <ReviewForm listingId={String(listing.id)} category="rentals" />
               </div>
-              <Button variant="secondary">Write a Review</Button>
             </div>
           </div>
 
