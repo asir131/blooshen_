@@ -38,6 +38,10 @@ import FindMyBroker from "./pages/FindMyBroker.tsx";
 import BrokerApply from "./pages/BrokerApply.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import OttoLanding from "./pages/OttoLanding.tsx";
+import Auth from "./pages/Auth.tsx";
+import ResetPassword from "./pages/ResetPassword.tsx";
+import ProtectedRoute from "./components/ProtectedRoute";
+import { AuthProvider } from "@/hooks/useAuth";
 import { useReferralDetection } from "@/hooks/useReferralTracking";
 import { OttoProvider } from "@/components/otto/OttoProvider";
 
@@ -68,8 +72,24 @@ const AppContent = () => {
         <Route path="/find-my-broker" element={<FindMyBroker />} />
         <Route path="/promoters" element={<PromotersLanding />} />
         <Route path="/otto" element={<OttoLanding />} />
-        <Route path="/admin/affiliates" element={<AdminAffiliates />} />
-        <Route path="/admin/brokers" element={<AdminBrokers />} />
+        <Route path="/auth" element={<Auth />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route
+          path="/admin/affiliates"
+          element={
+            <ProtectedRoute requireAdmin>
+              <AdminAffiliates />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/brokers"
+          element={
+            <ProtectedRoute requireAdmin>
+              <AdminBrokers />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/experts/apply/*" element={<BrokerApply />} />
         <Route path="/experts/:username" element={<ExpertProfile />} />
         <Route path="/dashboard" element={<DashboardLayout />}>
@@ -83,7 +103,14 @@ const AppContent = () => {
           <Route path="billing" element={<Billing />} />
           <Route path="new-listing" element={<NewListing />} />
           <Route path="affiliates" element={<Affiliates />} />
-          <Route path="promoter" element={<PromoterDashboard />} />
+          <Route
+            path="promoter"
+            element={
+              <ProtectedRoute requireAdmin>
+                <PromoterDashboard />
+              </ProtectedRoute>
+            }
+          />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
@@ -99,7 +126,9 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <AppContent />
+        <AuthProvider>
+          <AppContent />
+        </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
