@@ -14,6 +14,132 @@ export type Database = {
   }
   public: {
     Tables: {
+      broker_applications: {
+        Row: {
+          activity_log: Json
+          admin_notes: Json
+          applied_at: string
+          avatar_url: string | null
+          badge_tier: Database["public"]["Enums"]["badge_tier"]
+          banner_url: string | null
+          bio: string | null
+          city: string | null
+          connected_socials: string[]
+          created_at: string
+          distance_mi: number | null
+          email: string
+          featured_vehicles: number
+          heard_from: string | null
+          id: string
+          id_confidence: number | null
+          id_method: string | null
+          id_verified: boolean
+          id_verified_at: string | null
+          name: string
+          payout_method: string | null
+          payout_schedule: string
+          phone: string | null
+          phone_verified: boolean
+          phone_verified_at: string | null
+          prior_referral: string | null
+          score: number
+          score_breakdown: Json
+          self_description: string | null
+          source: Database["public"]["Enums"]["application_source"]
+          specialties: string[]
+          state: string | null
+          status: Database["public"]["Enums"]["application_status"]
+          step_reached: number
+          tagline: string | null
+          updated_at: string
+          user_id: string
+          username: string | null
+          zip: string | null
+        }
+        Insert: {
+          activity_log?: Json
+          admin_notes?: Json
+          applied_at?: string
+          avatar_url?: string | null
+          badge_tier?: Database["public"]["Enums"]["badge_tier"]
+          banner_url?: string | null
+          bio?: string | null
+          city?: string | null
+          connected_socials?: string[]
+          created_at?: string
+          distance_mi?: number | null
+          email: string
+          featured_vehicles?: number
+          heard_from?: string | null
+          id?: string
+          id_confidence?: number | null
+          id_method?: string | null
+          id_verified?: boolean
+          id_verified_at?: string | null
+          name: string
+          payout_method?: string | null
+          payout_schedule?: string
+          phone?: string | null
+          phone_verified?: boolean
+          phone_verified_at?: string | null
+          prior_referral?: string | null
+          score?: number
+          score_breakdown?: Json
+          self_description?: string | null
+          source?: Database["public"]["Enums"]["application_source"]
+          specialties?: string[]
+          state?: string | null
+          status?: Database["public"]["Enums"]["application_status"]
+          step_reached?: number
+          tagline?: string | null
+          updated_at?: string
+          user_id: string
+          username?: string | null
+          zip?: string | null
+        }
+        Update: {
+          activity_log?: Json
+          admin_notes?: Json
+          applied_at?: string
+          avatar_url?: string | null
+          badge_tier?: Database["public"]["Enums"]["badge_tier"]
+          banner_url?: string | null
+          bio?: string | null
+          city?: string | null
+          connected_socials?: string[]
+          created_at?: string
+          distance_mi?: number | null
+          email?: string
+          featured_vehicles?: number
+          heard_from?: string | null
+          id?: string
+          id_confidence?: number | null
+          id_method?: string | null
+          id_verified?: boolean
+          id_verified_at?: string | null
+          name?: string
+          payout_method?: string | null
+          payout_schedule?: string
+          phone?: string | null
+          phone_verified?: boolean
+          phone_verified_at?: string | null
+          prior_referral?: string | null
+          score?: number
+          score_breakdown?: Json
+          self_description?: string | null
+          source?: Database["public"]["Enums"]["application_source"]
+          specialties?: string[]
+          state?: string | null
+          status?: Database["public"]["Enums"]["application_status"]
+          step_reached?: number
+          tagline?: string | null
+          updated_at?: string
+          user_id?: string
+          username?: string | null
+          zip?: string | null
+        }
+        Relationships: []
+      }
       chat_messages: {
         Row: {
           content: string
@@ -759,6 +885,15 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
+      application_source: "Organic" | "Referral" | "Social"
+      application_status:
+        | "pending"
+        | "under_review"
+        | "approved"
+        | "rejected"
+        | "suspended"
+        | "waitlisted"
+      badge_tier: "Starter" | "Pro" | "Elite" | "Legend"
       commission_status: "pending" | "approved" | "paid"
       conversion_type:
         | "lead"
@@ -902,6 +1037,16 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "moderator", "user"],
+      application_source: ["Organic", "Referral", "Social"],
+      application_status: [
+        "pending",
+        "under_review",
+        "approved",
+        "rejected",
+        "suspended",
+        "waitlisted",
+      ],
+      badge_tier: ["Starter", "Pro", "Elite", "Legend"],
       commission_status: ["pending", "approved", "paid"],
       conversion_type: ["lead", "booking", "signup", "sale", "rsvp", "ticket"],
       listing_category_enum: [
