@@ -444,6 +444,60 @@ export type Database = {
           },
         ]
       }
+      listings: {
+        Row: {
+          category: Database["public"]["Enums"]["listing_category_enum"]
+          city: string | null
+          created_at: string
+          data: Json
+          description: string | null
+          id: string
+          image: string | null
+          images: string[]
+          is_active: boolean
+          location: string | null
+          price: number | null
+          state: string | null
+          title: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          category: Database["public"]["Enums"]["listing_category_enum"]
+          city?: string | null
+          created_at?: string
+          data?: Json
+          description?: string | null
+          id?: string
+          image?: string | null
+          images?: string[]
+          is_active?: boolean
+          location?: string | null
+          price?: number | null
+          state?: string | null
+          title: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["listing_category_enum"]
+          city?: string | null
+          created_at?: string
+          data?: Json
+          description?: string | null
+          id?: string
+          image?: string | null
+          images?: string[]
+          is_active?: boolean
+          location?: string | null
+          price?: number | null
+          state?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       otto_conversations: {
         Row: {
           broker_handoff_triggered: boolean | null
