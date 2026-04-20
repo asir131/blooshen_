@@ -444,6 +444,39 @@ export type Database = {
           },
         ]
       }
+      listing_reviews: {
+        Row: {
+          comment: string | null
+          created_at: string
+          id: string
+          listing_category: Database["public"]["Enums"]["listing_category_enum"]
+          listing_id: string
+          rating: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          listing_category: Database["public"]["Enums"]["listing_category_enum"]
+          listing_id: string
+          rating: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          listing_category?: Database["public"]["Enums"]["listing_category_enum"]
+          listing_id?: string
+          rating?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       listings: {
         Row: {
           category: Database["public"]["Enums"]["listing_category_enum"]
@@ -911,6 +944,30 @@ export type Database = {
         Update: {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      watchlist: {
+        Row: {
+          created_at: string
+          id: string
+          listing_category: Database["public"]["Enums"]["listing_category_enum"]
+          listing_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          listing_category: Database["public"]["Enums"]["listing_category_enum"]
+          listing_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          listing_category?: Database["public"]["Enums"]["listing_category_enum"]
+          listing_id?: string
           user_id?: string
         }
         Relationships: []
