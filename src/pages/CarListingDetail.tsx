@@ -8,6 +8,8 @@ import { mockListings } from "@/data/mockListings";
 import CarListingCard from "@/components/CarListingCard";
 import ShareEarnButton from "@/components/ShareEarnButton";
 import SalesAgentChat from "@/components/SalesAgentChat";
+import ReviewForm from "@/components/ReviewForm";
+import ReviewList from "@/components/ReviewList";
 import {
   Gauge, Cog, PaintBucket, Fingerprint, MapPin, CalendarDays,
   Phone, Mail, MessageSquare, Flag, ShieldCheck, ArrowLeft,
@@ -127,6 +129,13 @@ const CarListingDetail = () => {
                   <p className="text-xs text-muted-foreground font-body">Vehicle history report available upon request.</p>
                 </div>
               </div>
+            </div>
+
+            {/* Reviews */}
+            <div className="space-y-4">
+              <h2 className="font-heading text-xl font-bold text-foreground">REVIEWS</h2>
+              <ReviewList listingId={String(listing.id)} category="cars_for_sale" />
+              <ReviewForm listingId={String(listing.id)} category="cars_for_sale" />
             </div>
           </div>
 
