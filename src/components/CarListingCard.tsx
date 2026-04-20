@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Gauge, MapPin } from "lucide-react";
 import ShareEarnButton from "@/components/ShareEarnButton";
+import WatchlistToggle from "@/components/WatchlistToggle";
 
 interface Props {
   listing: CarListing;
@@ -18,6 +19,9 @@ const CarListingCard = ({ listing, viewMode }: Props) => {
       <div className="flex flex-col sm:flex-row gap-4 rounded-lg border border-border bg-card overflow-hidden transition-all hover:border-primary/50 hover:shadow-[0_0_24px_hsl(50_100%_50%/0.06)]">
         <div className="relative sm:w-64 h-48 sm:h-auto shrink-0 overflow-hidden">
           <img src={listing.image} alt={title} className="h-full w-full object-cover" loading="lazy" />
+          <div className="absolute top-3 right-3 bg-background/80 rounded-md backdrop-blur-sm">
+            <WatchlistToggle listingId={String(listing.id)} category="cars_for_sale" />
+          </div>
           <ShareEarnButton listingId={String(listing.id)} listingPath={`/cars-for-sale/${listing.id}`} category="cars_for_sale" variant="card" />
         </div>
         <div className="flex flex-1 flex-col justify-between p-4 gap-3">
@@ -50,6 +54,9 @@ const CarListingCard = ({ listing, viewMode }: Props) => {
         <Badge className="absolute top-3 left-3" variant={listing.condition === "New" ? "default" : listing.condition === "Certified" ? "accent" : "secondary"}>
           {listing.condition}
         </Badge>
+        <div className="absolute top-3 right-12 bg-background/80 rounded-md backdrop-blur-sm">
+          <WatchlistToggle listingId={String(listing.id)} category="cars_for_sale" />
+        </div>
         <ShareEarnButton listingId={String(listing.id)} listingPath={`/cars-for-sale/${listing.id}`} category="cars_for_sale" variant="card" />
       </div>
       <div className="p-4 space-y-3">

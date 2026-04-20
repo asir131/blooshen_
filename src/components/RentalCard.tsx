@@ -1,10 +1,10 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import type { RentalListing } from "@/data/mockRentals";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Star, MapPin, Heart, MessageSquare } from "lucide-react";
+import { Star, MapPin, MessageSquare } from "lucide-react";
 import ShareEarnButton from "@/components/ShareEarnButton";
+import WatchlistToggle from "@/components/WatchlistToggle";
 
 interface Props {
   listing: RentalListing;
@@ -12,16 +12,11 @@ interface Props {
 }
 
 const RentalCard = ({ listing, viewMode }: Props) => {
-  const [saved, setSaved] = useState(false);
   const title = `${listing.year} ${listing.make} ${listing.model}`;
   const cashOk = listing.features.includes("Cash Accepted");
   const stars = Array.from({ length: 5 }, (_, i) => i < Math.round(listing.rating));
 
-  const heartBtn = (
-    <button onClick={() => setSaved(!saved)} className={`p-1.5 rounded-md transition-colors ${saved ? "text-primary" : "text-muted-foreground hover:text-primary"}`} aria-label="Save to watchlist">
-      <Heart className={`h-4 w-4 ${saved ? "fill-primary" : ""}`} />
-    </button>
-  );
+  const heartBtn = <WatchlistToggle listingId={String(listing.id)} category="rentals" />;
 
   const availBadge = listing.availableNow ? (
     <span className="inline-flex items-center gap-1.5 text-[11px] font-heading font-bold tracking-wider">
