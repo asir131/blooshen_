@@ -38,6 +38,8 @@ import FindMyBroker from "./pages/FindMyBroker.tsx";
 import BrokerApply from "./pages/BrokerApply.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import OttoLanding from "./pages/OttoLanding.tsx";
+import Pricing from "./pages/Pricing.tsx";
+import CheckoutReturn from "./pages/CheckoutReturn.tsx";
 import Auth from "./pages/Auth.tsx";
 import ResetPassword from "./pages/ResetPassword.tsx";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -72,6 +74,8 @@ const AppContent = () => {
         <Route path="/find-my-broker" element={<FindMyBroker />} />
         <Route path="/promoters" element={<PromotersLanding />} />
         <Route path="/otto" element={<OttoLanding />} />
+        <Route path="/pricing" element={<Pricing />} />
+        <Route path="/checkout/return" element={<CheckoutReturn />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route
