@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 import MobileFilterSheet from "@/components/MobileFilterSheet";
 import CarsFilterSidebar, { type Filters, defaultFilters } from "@/components/CarsFilterSidebar";
 import CarListingCard from "@/components/CarListingCard";
-import { mockListings } from "@/data/mockListings";
+import { useListings } from "@/hooks/useListings";
 import { Button } from "@/components/ui/button";
 import { LayoutGrid, List, SlidersHorizontal, ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -18,9 +18,10 @@ const CarsForSale = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [page, setPage] = useState(1);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const { data: listings = [], isLoading } = useListings("cars_for_sale");
 
   const filtered = useMemo(() => {
-    let items = [...mockListings];
+    let items = [...listings];
 
     if (filters.make !== "All") items = items.filter((c) => c.make === filters.make);
     items = items.filter((c) => c.year >= filters.yearRange[0] && c.year <= filters.yearRange[1]);
@@ -36,7 +37,7 @@ const CarsForSale = () => {
       case "mileage": items.sort((a, b) => a.mileage - b.mileage); break;
     }
     return items;
-  }, [filters, sort]);
+  }, [listings, filters, sort]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE));
   const currentPage = Math.min(page, totalPages);
