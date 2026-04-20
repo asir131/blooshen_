@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -6,21 +6,16 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import {
   UserPlus, Clock, CheckCircle, XCircle, MapPin,
-  Download, ChevronDown, Search, MoreHorizontal,
+  Download, ChevronDown, Search, MoreHorizontal, Loader2,
 } from "lucide-react";
 import AdminBrokersSidebar from "@/components/admin-brokers/AdminBrokersSidebar";
 import ApplicationDetailPanel from "@/components/admin-brokers/ApplicationDetailPanel";
 import InviteBrokerModal from "@/components/admin-brokers/InviteBrokerModal";
 import {
-  mockBrokerApplications,
-  applicationStats,
-  statusCounts,
   type BrokerApplication,
   type ApplicationStatus,
 } from "@/data/mockBrokerApplications";
-
-// TODO: Check auth.user role === 'admin' on mount
-// Redirect to /dashboard if not admin
+import { useBrokerApplications, useUpdateApplicationStatus } from "@/hooks/useBrokerApplications";
 
 const statusBadgeClasses: Record<ApplicationStatus, string> = {
   pending: "bg-[hsl(var(--primary))] text-[#1A1A1A]",
@@ -44,7 +39,8 @@ const AdminBrokers = () => {
   const navigate = useNavigate();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [activeNav, setActiveNav] = useState("applications");
-  const [applications, setApplications] = useState<BrokerApplication[]>(mockBrokerApplications);
+  const { data: applications = [], isLoading } = useBrokerApplications();
+  const updateStatus = useUpdateApplicationStatus();
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
@@ -63,6 +59,22 @@ const AdminBrokers = () => {
     return matchesStatus && matchesSearch;
   });
 
+  const liveStats = useMemo(() => {
+    const total = applications.length;
+    const pending = applications.filter((a) => a.status === "pending").length;
+    const approved = applications.filter((a) => a.status === "approved").length;
+    const rejected = applications.filter((a) => a.status === "rejected").length;
+    const rejectionRate = total > 0 ? (rejected / total) * 100 : 0;
+    const cities = new Set(applications.filter((a) => a.status === "approved").map((a) => a.city)).size;
+    return { total, pending, approved, rejected, rejectionRate, activeBrokers: approved, cities };
+  }, [applications]);
+
+  const liveStatusCounts = useMemo<Record<string, number>>(() => {
+    const counts: Record<string, number> = { all: applications.length };
+    for (const a of applications) counts[a.status] = (counts[a.status] ?? 0) + 1;
+    return counts;
+  }, [applications]);
+
   const toggleSelect = (id: string) => {
     setSelectedIds((prev) => {
       const next = new Set(prev);
@@ -80,33 +92,29 @@ const AdminBrokers = () => {
   };
 
   const handleUpdateStatus = (id: string, status: ApplicationStatus, reason?: string) => {
-    setApplications((prev) =>
-      prev.map((a) => (a.id === id ? { ...a, status } : a))
-    );
+    updateStatus.mutate({ id, status });
     setSelectedApp((prev) => (prev?.id === id ? { ...prev, status } : prev));
-    // TODO: POST to /api/admin/brokers/approve or /reject
-    // TODO: Trigger email notification
   };
 
   const scoreColor = (score: number) =>
     score >= 80 ? "text-green-400" : score >= 60 ? "text-[hsl(var(--primary))]" : "text-red-400";
 
   const stats = [
-    { label: "Total Applications", value: applicationStats.total.toLocaleString(), change: `+${applicationStats.totalChangeWeek} this week`, changeColor: "text-green-400", icon: UserPlus },
-    { label: "Pending Review", value: String(applicationStats.pending), change: `${applicationStats.pendingAwaiting48hrs} awaiting >48hrs`, changeColor: "text-red-400", icon: Clock, valueColor: "text-[hsl(var(--primary))]" },
-    { label: "Approved This Month", value: String(applicationStats.approvedThisMonth), change: `+${applicationStats.approvedChangePercent}% vs last month`, changeColor: "text-green-400", icon: CheckCircle },
-    { label: "Rejection Rate", value: `${applicationStats.rejectionRate}%`, change: `↓ ${Math.abs(applicationStats.rejectionRateChange)}% from last month`, changeColor: "text-green-400", icon: XCircle },
-    { label: "Active Brokers", value: String(applicationStats.activeBrokers), change: `Across ${applicationStats.activeBrokersCities} cities`, changeColor: "text-muted-foreground", icon: MapPin },
+    { label: "Total Applications", value: liveStats.total.toLocaleString(), change: "All-time", changeColor: "text-muted-foreground", icon: UserPlus },
+    { label: "Pending Review", value: String(liveStats.pending), change: "Awaiting decision", changeColor: "text-red-400", icon: Clock, valueColor: "text-[hsl(var(--primary))]" },
+    { label: "Approved", value: String(liveStats.approved), change: "Total approved", changeColor: "text-green-400", icon: CheckCircle },
+    { label: "Rejection Rate", value: `${liveStats.rejectionRate.toFixed(1)}%`, change: `${liveStats.rejected} rejected`, changeColor: "text-muted-foreground", icon: XCircle },
+    { label: "Active Brokers", value: String(liveStats.activeBrokers), change: `Across ${liveStats.cities} cities`, changeColor: "text-muted-foreground", icon: MapPin },
   ];
 
   const statusTabs = [
-    { key: "all", label: "All", count: statusCounts.all },
-    { key: "pending", label: "Pending", count: statusCounts.pending },
-    { key: "under_review", label: "Under Review", count: statusCounts.under_review },
-    { key: "approved", label: "Approved", count: statusCounts.approved },
-    { key: "rejected", label: "Rejected", count: statusCounts.rejected },
-    { key: "suspended", label: "Suspended", count: statusCounts.suspended },
-    { key: "waitlisted", label: "Waitlisted", count: statusCounts.waitlisted },
+    { key: "all", label: "All", count: liveStatusCounts.all ?? 0 },
+    { key: "pending", label: "Pending", count: liveStatusCounts.pending ?? 0 },
+    { key: "under_review", label: "Under Review", count: liveStatusCounts.under_review ?? 0 },
+    { key: "approved", label: "Approved", count: liveStatusCounts.approved ?? 0 },
+    { key: "rejected", label: "Rejected", count: liveStatusCounts.rejected ?? 0 },
+    { key: "suspended", label: "Suspended", count: liveStatusCounts.suspended ?? 0 },
+    { key: "waitlisted", label: "Waitlisted", count: liveStatusCounts.waitlisted ?? 0 },
   ];
 
   return (
