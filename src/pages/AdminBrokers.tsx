@@ -304,7 +304,7 @@ const AdminBrokers = () => {
 
           {/* Pagination */}
           <div className="flex items-center justify-between px-4 py-3 border-t border-[#2a2a2a]">
-            <p className="text-[11px] text-muted-foreground">Showing 1–{filtered.length} of {statusFilter === "all" ? statusCounts.all : statusCounts[statusFilter] || filtered.length} applications</p>
+            <p className="text-[11px] text-muted-foreground">Showing 1–{filtered.length} of {statusFilter === "all" ? liveStatusCounts.all ?? 0 : liveStatusCounts[statusFilter] ?? filtered.length} applications</p>
             <div className="flex items-center gap-1">
               <Button variant="secondary" size="sm" className="text-[10px] h-7" disabled>← Previous</Button>
               {[1, 2, 3].map((p) => (
