@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 import MobileFilterSheet from "@/components/MobileFilterSheet";
 import RentalFilterSidebar, { type RentalFilters, defaultRentalFilters } from "@/components/RentalFilterSidebar";
 import RentalCard from "@/components/RentalCard";
-import { mockRentals } from "@/data/mockRentals";
+import { useListings } from "@/hooks/useListings";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { LayoutGrid, List, Map, SlidersHorizontal, ChevronLeft, ChevronRight, MapPin, Banknote, ShieldCheck, Users } from "lucide-react";
@@ -19,9 +19,10 @@ const Rentals = () => {
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [page, setPage] = useState(1);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const { data: rentals = [] } = useListings("rentals");
 
   const filtered = useMemo(() => {
-    let items = [...mockRentals];
+    let items = [...rentals];
     if (filters.vehicleTypes.length) items = items.filter((r) => filters.vehicleTypes.includes(r.vehicleType));
     items = items.filter((r) => r.dailyRate >= filters.priceRange[0] && r.dailyRate <= filters.priceRange[1]);
     if (filters.ownerTypes.length) items = items.filter((r) => filters.ownerTypes.includes(r.ownerType));
@@ -36,7 +37,7 @@ const Rentals = () => {
       case "closest": items.sort((a, b) => a.distance - b.distance); break;
     }
     return items;
-  }, [filters, sort]);
+  }, [rentals, filters, sort]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
   const currentPage = Math.min(page, totalPages);

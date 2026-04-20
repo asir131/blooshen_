@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 import MobileFilterSheet from "@/components/MobileFilterSheet";
 import CarsFilterSidebar, { type Filters, defaultFilters } from "@/components/CarsFilterSidebar";
 import CarListingCard from "@/components/CarListingCard";
-import { mockListings } from "@/data/mockListings";
+import { useListings } from "@/hooks/useListings";
 import { Button } from "@/components/ui/button";
 import { LayoutGrid, List, SlidersHorizontal, ChevronLeft, ChevronRight } from "lucide-react";
 

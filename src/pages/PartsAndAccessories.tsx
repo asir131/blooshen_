@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 import MobileFilterSheet from "@/components/MobileFilterSheet";
 import PartsFilterSidebar, { type PartsFilters, defaultPartsFilters } from "@/components/PartsFilterSidebar";
 import PartListingCard from "@/components/PartListingCard";
-import { mockParts } from "@/data/mockParts";
+import { useListings } from "@/hooks/useListings";
 import { Button } from "@/components/ui/button";
 import { LayoutGrid, List, SlidersHorizontal, ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -17,9 +17,10 @@ const PartsAndAccessories = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [page, setPage] = useState(1);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const { data: parts = [] } = useListings("parts_accessories");
 
   const filtered = useMemo(() => {
-    let items = [...mockParts];
+    let items = [...parts];
     if (filters.categories.length > 0) items = items.filter((p) => filters.categories.includes(p.category));
     if (filters.conditions.length > 0) items = items.filter((p) => filters.conditions.includes(p.condition));
     if (filters.sellerTypes.length > 0) items = items.filter((p) => filters.sellerTypes.includes(p.sellerType));
@@ -32,7 +33,7 @@ const PartsAndAccessories = () => {
       default: break;
     }
     return items;
-  }, [filters, sort]);
+  }, [parts, filters, sort]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE));
   const currentPage = Math.min(page, totalPages);
