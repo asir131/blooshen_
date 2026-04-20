@@ -11,19 +11,19 @@ const CategoryFields = ({ category }: CategoryFieldsProps) => {
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1">
           <label className="text-xs font-heading font-bold uppercase tracking-wider text-muted-foreground">Year</label>
-          <Input placeholder="2024" />
+          <Input name="year" placeholder="2024" />
         </div>
         <div className="space-y-1">
           <label className="text-xs font-heading font-bold uppercase tracking-wider text-muted-foreground">Price</label>
-          <Input placeholder="$0" />
+          <Input name="price" type="number" placeholder="0" />
         </div>
         <div className="space-y-1">
           <label className="text-xs font-heading font-bold uppercase tracking-wider text-muted-foreground">Make</label>
-          <Input placeholder="Toyota" />
+          <Input name="make" placeholder="Toyota" />
         </div>
         <div className="space-y-1">
           <label className="text-xs font-heading font-bold uppercase tracking-wider text-muted-foreground">Model</label>
-          <Input placeholder="Camry" />
+          <Input name="model" placeholder="Camry" />
         </div>
       </div>
     );
@@ -34,11 +34,11 @@ const CategoryFields = ({ category }: CategoryFieldsProps) => {
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1">
           <label className="text-xs font-heading font-bold uppercase tracking-wider text-muted-foreground">Price</label>
-          <Input placeholder="$0" />
+          <Input name="price" type="number" placeholder="0" />
         </div>
         <div className="space-y-1">
           <label className="text-xs font-heading font-bold uppercase tracking-wider text-muted-foreground">Condition</label>
-          <Input placeholder="New / Used" />
+          <Input name="condition" placeholder="New / Used" />
         </div>
       </div>
     );
@@ -48,7 +48,7 @@ const CategoryFields = ({ category }: CategoryFieldsProps) => {
     return (
       <div className="space-y-1">
         <label className="text-xs font-heading font-bold uppercase tracking-wider text-muted-foreground">Service Type</label>
-        <Input placeholder="e.g. Oil Change, Body Shop, Detailing" />
+        <Input name="serviceType" placeholder="e.g. Oil Change, Body Shop, Detailing" />
       </div>
     );
   }
@@ -58,11 +58,11 @@ const CategoryFields = ({ category }: CategoryFieldsProps) => {
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1">
           <label className="text-xs font-heading font-bold uppercase tracking-wider text-muted-foreground">Specialty</label>
-          <Input placeholder="e.g. Engine Diagnostics" />
+          <Input name="specialty" placeholder="e.g. Engine Diagnostics" />
         </div>
         <div className="space-y-1">
           <label className="text-xs font-heading font-bold uppercase tracking-wider text-muted-foreground">Hourly Rate</label>
-          <Input placeholder="$0 or Free" />
+          <Input name="hourlyRate" placeholder="$0 or Free" />
         </div>
       </div>
     );
@@ -73,11 +73,11 @@ const CategoryFields = ({ category }: CategoryFieldsProps) => {
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1">
           <label className="text-xs font-heading font-bold uppercase tracking-wider text-muted-foreground">Event Date</label>
-          <Input type="date" />
+          <Input name="eventDate" type="date" />
         </div>
         <div className="space-y-1">
           <label className="text-xs font-heading font-bold uppercase tracking-wider text-muted-foreground">Ticket Price</label>
-          <Input placeholder="$0 or Free" />
+          <Input name="ticketPrice" placeholder="$0 or Free" />
         </div>
       </div>
     );
