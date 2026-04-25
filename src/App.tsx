@@ -47,6 +47,7 @@ import ResetPassword from "./pages/ResetPassword.tsx";
 import AdminLogin from "./pages/AdminLogin.tsx";
 import AdminDashboard from "./pages/AdminDashboard.tsx";
 import AdminMaster from "./pages/AdminMaster.tsx";
+import AdminInventory from "./pages/AdminInventory.tsx";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "@/hooks/useAuth";
 import { useReferralDetection } from "@/hooks/useReferralTracking";
@@ -99,6 +100,14 @@ const AppContent = () => {
           element={
             <ProtectedRoute requiredRole="master_admin">
               <AdminMaster />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/inventory"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminInventory />
             </ProtectedRoute>
           }
         />
