@@ -295,8 +295,8 @@ const AdminInventory = () => {
 
         {/* Filter bar */}
         <div className="mt-6 space-y-3">
-          <FilterRow label="Status" filters={STATUS_FILTERS} active={statusFilter} onChange={setStatusFilter} />
-          <FilterRow label="Seller" filters={SELLER_FILTERS} active={sellerFilter} onChange={setSellerFilter} />
+          <FilterRow<StatusFilter> label="Status" filters={STATUS_FILTERS} active={statusFilter} onChange={setStatusFilter} />
+          <FilterRow<SellerFilter> label="Seller" filters={SELLER_FILTERS} active={sellerFilter} onChange={setSellerFilter} />
         </div>
 
         {/* Table */}
@@ -466,5 +466,4 @@ function FilterRow<T extends string>({ label, filters, active, onChange }: Filte
     </div>
   );
 }
-
 export default AdminInventory;
