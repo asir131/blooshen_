@@ -48,6 +48,10 @@ import AdminLogin from "./pages/AdminLogin.tsx";
 import AdminDashboard from "./pages/AdminDashboard.tsx";
 import AdminMaster from "./pages/AdminMaster.tsx";
 import AdminInventory from "./pages/AdminInventory.tsx";
+import AdminUsers from "./pages/AdminUsers.tsx";
+import AdminAlerts from "./pages/AdminAlerts.tsx";
+import AdminAudit from "./pages/AdminAudit.tsx";
+import AdminSettings from "./pages/AdminSettings.tsx";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "@/hooks/useAuth";
 import { useReferralDetection } from "@/hooks/useReferralTracking";
@@ -108,6 +112,38 @@ const AppContent = () => {
           element={
             <ProtectedRoute requiredRole="admin">
               <AdminInventory />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/users"
+          element={
+            <ProtectedRoute requiredRole="master_admin">
+              <AdminUsers />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/alerts"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminAlerts />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/audit"
+          element={
+            <ProtectedRoute requiredRole="master_admin">
+              <AdminAudit />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/settings"
+          element={
+            <ProtectedRoute requiredRole="master_admin">
+              <AdminSettings />
             </ProtectedRoute>
           }
         />
