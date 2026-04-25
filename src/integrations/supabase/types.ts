@@ -14,6 +14,47 @@ export type Database = {
   }
   public: {
     Tables: {
+      audit_logs: {
+        Row: {
+          action: string
+          created_at: string
+          entity_id: string | null
+          entity_type: string
+          id: string
+          ip_address: string | null
+          metadata: Json
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          entity_id?: string | null
+          entity_type: string
+          id?: string
+          ip_address?: string | null
+          metadata?: Json
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string
+          id?: string
+          ip_address?: string | null
+          metadata?: Json
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "audit_logs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       broker_applications: {
         Row: {
           activity_log: Json
@@ -531,6 +572,72 @@ export type Database = {
           },
         ]
       }
+      listing_images: {
+        Row: {
+          created_at: string
+          file_name: string
+          file_size: number | null
+          flag_reason: string | null
+          hash: string | null
+          height: number | null
+          id: string
+          is_flagged: boolean
+          is_primary: boolean
+          listing_id: string
+          quality_score: number
+          uploaded_by: string | null
+          url: string
+          width: number | null
+        }
+        Insert: {
+          created_at?: string
+          file_name: string
+          file_size?: number | null
+          flag_reason?: string | null
+          hash?: string | null
+          height?: number | null
+          id?: string
+          is_flagged?: boolean
+          is_primary?: boolean
+          listing_id: string
+          quality_score?: number
+          uploaded_by?: string | null
+          url: string
+          width?: number | null
+        }
+        Update: {
+          created_at?: string
+          file_name?: string
+          file_size?: number | null
+          flag_reason?: string | null
+          hash?: string | null
+          height?: number | null
+          id?: string
+          is_flagged?: boolean
+          is_primary?: boolean
+          listing_id?: string
+          quality_score?: number
+          uploaded_by?: string | null
+          url?: string
+          width?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "listing_images_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "vehicle_listings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "listing_images_uploaded_by_fkey"
+            columns: ["uploaded_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       listing_reviews: {
         Row: {
           comment: string | null
@@ -865,7 +972,10 @@ export type Database = {
           created_at: string
           display_name: string | null
           email: string | null
+          full_name: string | null
           id: string
+          is_active: boolean
+          last_login: string | null
           updated_at: string
           user_id: string
         }
@@ -874,7 +984,10 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           email?: string | null
+          full_name?: string | null
           id?: string
+          is_active?: boolean
+          last_login?: string | null
           updated_at?: string
           user_id: string
         }
@@ -883,7 +996,10 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           email?: string | null
+          full_name?: string | null
           id?: string
+          is_active?: boolean
+          last_login?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -1200,6 +1316,57 @@ export type Database = {
         }
         Relationships: []
       }
+      system_alerts: {
+        Row: {
+          alert_type: string
+          created_at: string
+          id: string
+          is_resolved: boolean
+          listing_id: string | null
+          message: string
+          resolved_at: string | null
+          resolved_by: string | null
+          title: string
+        }
+        Insert: {
+          alert_type: string
+          created_at?: string
+          id?: string
+          is_resolved?: boolean
+          listing_id?: string | null
+          message: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          title: string
+        }
+        Update: {
+          alert_type?: string
+          created_at?: string
+          id?: string
+          is_resolved?: boolean
+          listing_id?: string | null
+          message?: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "system_alerts_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "vehicle_listings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "system_alerts_resolved_by_fkey"
+            columns: ["resolved_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           id: string
@@ -1215,6 +1382,113 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      vehicle_listings: {
+        Row: {
+          body_style: string | null
+          color: string | null
+          condition: string | null
+          created_at: string
+          created_by: string
+          description: string
+          flag_reasons: Json
+          fraud_score: number
+          id: string
+          is_published: boolean
+          make: string
+          mileage: number
+          model: string
+          price: number
+          published_at: string | null
+          rejection_reason: string | null
+          seller_type: string
+          status: string
+          updated_at: string
+          validation_score: number
+          validation_status: string
+          vin: string
+          year: number
+        }
+        Insert: {
+          body_style?: string | null
+          color?: string | null
+          condition?: string | null
+          created_at?: string
+          created_by: string
+          description: string
+          flag_reasons?: Json
+          fraud_score?: number
+          id?: string
+          is_published?: boolean
+          make: string
+          mileage: number
+          model: string
+          price: number
+          published_at?: string | null
+          rejection_reason?: string | null
+          seller_type: string
+          status?: string
+          updated_at?: string
+          validation_score?: number
+          validation_status?: string
+          vin: string
+          year: number
+        }
+        Update: {
+          body_style?: string | null
+          color?: string | null
+          condition?: string | null
+          created_at?: string
+          created_by?: string
+          description?: string
+          flag_reasons?: Json
+          fraud_score?: number
+          id?: string
+          is_published?: boolean
+          make?: string
+          mileage?: number
+          model?: string
+          price?: number
+          published_at?: string | null
+          rejection_reason?: string | null
+          seller_type?: string
+          status?: string
+          updated_at?: string
+          validation_score?: number
+          validation_status?: string
+          vin?: string
+          year?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vehicle_listings_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vin_validation_cache: {
+        Row: {
+          decoded_data: Json
+          is_valid: boolean
+          validated_at: string
+          vin: string
+        }
+        Insert: {
+          decoded_data?: Json
+          is_valid: boolean
+          validated_at?: string
+          vin: string
+        }
+        Update: {
+          decoded_data?: Json
+          is_valid?: boolean
+          validated_at?: string
+          vin?: string
         }
         Relationships: []
       }
@@ -1294,7 +1568,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "admin" | "moderator" | "user" | "broker"
+      app_role: "admin" | "moderator" | "user" | "broker" | "master_admin"
       application_source: "Organic" | "Referral" | "Social"
       application_status:
         | "pending"
@@ -1446,7 +1720,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "moderator", "user", "broker"],
+      app_role: ["admin", "moderator", "user", "broker", "master_admin"],
       application_source: ["Organic", "Referral", "Social"],
       application_status: [
         "pending",
