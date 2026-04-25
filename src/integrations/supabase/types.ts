@@ -966,6 +966,54 @@ export type Database = {
           },
         ]
       }
+      platform_settings: {
+        Row: {
+          alert_email: string | null
+          auto_block_on_critical: boolean
+          auto_scan_on_submit: boolean
+          email_alerts_enabled: boolean
+          id: number
+          max_price_threshold: number
+          min_description_length: number
+          min_images_required: number
+          min_price_threshold: number
+          placeholder_words: string[]
+          scan_frequency: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          alert_email?: string | null
+          auto_block_on_critical?: boolean
+          auto_scan_on_submit?: boolean
+          email_alerts_enabled?: boolean
+          id?: number
+          max_price_threshold?: number
+          min_description_length?: number
+          min_images_required?: number
+          min_price_threshold?: number
+          placeholder_words?: string[]
+          scan_frequency?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          alert_email?: string | null
+          auto_block_on_critical?: boolean
+          auto_scan_on_submit?: boolean
+          email_alerts_enabled?: boolean
+          id?: number
+          max_price_threshold?: number
+          min_description_length?: number
+          min_images_required?: number
+          min_price_threshold?: number
+          placeholder_words?: string[]
+          scan_frequency?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
