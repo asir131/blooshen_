@@ -44,6 +44,9 @@ import Orders from "./pages/Orders.tsx";
 import Unsubscribe from "./pages/Unsubscribe.tsx";
 import Auth from "./pages/Auth.tsx";
 import ResetPassword from "./pages/ResetPassword.tsx";
+import AdminLogin from "./pages/AdminLogin.tsx";
+import AdminDashboard from "./pages/AdminDashboard.tsx";
+import AdminMaster from "./pages/AdminMaster.tsx";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "@/hooks/useAuth";
 import { useReferralDetection } from "@/hooks/useReferralTracking";
@@ -82,6 +85,23 @@ const AppContent = () => {
         <Route path="/unsubscribe" element={<Unsubscribe />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route
+          path="/admin/dashboard"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/master"
+          element={
+            <ProtectedRoute requiredRole="master_admin">
+              <AdminMaster />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/admin/affiliates"
           element={
