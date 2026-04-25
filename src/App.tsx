@@ -155,7 +155,9 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
-          <AppContent />
+          <OttoProvider>
+            <AppContent />
+          </OttoProvider>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
