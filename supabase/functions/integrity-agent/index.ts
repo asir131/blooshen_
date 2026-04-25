@@ -257,17 +257,34 @@ Deno.serve(async (req) => {
     if (!profile || !profile.is_active) flags.push("UNVERIFIED_USER");
 
     // ---- Score & Decision
-    fraudScore = Math.min(100, flags.length * 20);
-    const validationStatus =
-      flags.length === 0 ? "passed" : fraudScore >= 60 ? "failed" : "flagged";
-    const newStatus =
-      validationStatus === "passed"
-        ? "approved"
-        : validationStatus === "failed"
-        ? "rejected"
-        : "pending_review";
+    // Critical flags = anything that should block the listing entirely
+    const CRITICAL_PREFIXES = [
+      "INVALID_VIN_FORMAT",
+      "DUPLICATE_VIN_DETECTED",
+      "UNVERIFIED_USER",
+      "PLACEHOLDER_TEXT_DETECTED",
+      "VIN_MISMATCH",
+    ];
+    const hasCritical = flags.some((f) =>
+      CRITICAL_PREFIXES.some((p) => f.startsWith(p)),
+    );
 
+    fraudScore = Math.min(100, flags.length * 20 + (hasCritical ? 40 : 0));
     const validationScore = Math.max(0, 100 - fraudScore);
+
+    let validationStatus: "passed" | "failed" | "flagged";
+    let newStatus: "approved" | "rejected" | "pending_review" | "blocked";
+
+    if (flags.length === 0) {
+      validationStatus = "passed";
+      newStatus = "approved";
+    } else if (hasCritical) {
+      validationStatus = "failed";
+      newStatus = "blocked";
+    } else {
+      validationStatus = "flagged";
+      newStatus = "pending_review";
+    }
 
     // ---- Update listing
     const { error: updateErr } = await supabase
@@ -289,18 +306,18 @@ Deno.serve(async (req) => {
       console.error("[integrity-agent] update failed", updateErr);
     }
 
-    // ---- System alert for critical issues
-    if (fraudScore >= 60) {
+    // ---- System alert for critical / warning issues
+    if (hasCritical) {
       await supabase.from("system_alerts").insert({
         alert_type: "critical",
-        title: `${AGENT_NAME}: Listing rejected`,
-        message: `Listing ${listingId} failed validation. Flags: ${flags.join(", ")}`,
+        title: `${AGENT_NAME}: Listing blocked`,
+        message: `Listing ${listingId} blocked. Flags: ${flags.join(", ")}`,
         listing_id: listingId,
       } as never);
     } else if (flags.length > 0) {
       await supabase.from("system_alerts").insert({
         alert_type: "warning",
-        title: `${AGENT_NAME}: Listing flagged`,
+        title: `${AGENT_NAME}: Listing flagged for review`,
         message: `Listing ${listingId} has issues: ${flags.join(", ")}`,
         listing_id: listingId,
       } as never);
@@ -309,17 +326,18 @@ Deno.serve(async (req) => {
     // ---- Audit log
     await supabase.from("audit_logs").insert({
       user_id: null,
-      action: "integrity_agent_run",
+      action: "INTEGRITY_AGENT_SCAN",
       entity_type: "vehicle_listing",
       entity_id: listingId,
       metadata: {
         agent: AGENT_NAME,
         triggered_by: triggeredBy,
         flags,
-        fraud_score: fraudScore,
+        score: fraudScore,
         validation_score: validationScore,
         validation_status: validationStatus,
-        new_status: newStatus,
+        result: newStatus,
+        critical: hasCritical,
       } as never,
     });
 
