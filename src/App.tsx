@@ -40,6 +40,8 @@ import NotFound from "./pages/NotFound.tsx";
 import OttoLanding from "./pages/OttoLanding.tsx";
 import Pricing from "./pages/Pricing.tsx";
 import CheckoutReturn from "./pages/CheckoutReturn.tsx";
+import Orders from "./pages/Orders.tsx";
+import Unsubscribe from "./pages/Unsubscribe.tsx";
 import Auth from "./pages/Auth.tsx";
 import ResetPassword from "./pages/ResetPassword.tsx";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -76,6 +78,8 @@ const AppContent = () => {
         <Route path="/otto" element={<OttoLanding />} />
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/checkout/return" element={<CheckoutReturn />} />
+        <Route path="/orders" element={<Orders />} />
+        <Route path="/unsubscribe" element={<Unsubscribe />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route
