@@ -34,6 +34,7 @@ const Navbar = () => {
           {/* Desktop actions */}
           <div className="hidden md:flex items-center gap-2">
             <Button variant="ghost" size="sm" asChild><Link to="/cars-for-sale">Browse</Link></Button>
+            <Button variant="ghost" size="sm" asChild><Link to="/orders">Special Order</Link></Button>
             <Button variant="ghost" size="sm">Sell</Button>
             <Button size="sm" asChild><Link to="/dashboard">Dashboard</Link></Button>
           </div>
@@ -88,6 +89,13 @@ const Navbar = () => {
               >
                 <LayoutDashboard className="h-4 w-4 text-primary" />
                 Dashboard
+              </Link>
+              <Link
+                to="/orders"
+                onClick={() => setMenuOpen(false)}
+                className="flex items-center gap-3 px-4 py-3 rounded-md text-sm font-bold text-cta hover:bg-secondary transition-colors min-h-[44px]"
+              >
+                Special Order
               </Link>
               <Link
                 to="/dashboard/new-listing"
