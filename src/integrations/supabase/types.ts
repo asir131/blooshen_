@@ -1062,6 +1062,72 @@ export type Database = {
           },
         ]
       }
+      special_orders: {
+        Row: {
+          body_style_other: string | null
+          body_styles: string[]
+          budget: string | null
+          color: string | null
+          comments: string | null
+          created_at: string
+          deposit_status: string
+          email: string
+          full_name: string
+          id: string
+          make_model: string
+          mileage_range: string | null
+          payment_method: string
+          phone: string
+          status: string
+          stripe_session_id: string | null
+          updated_at: string
+          user_id: string | null
+          year_range: string | null
+        }
+        Insert: {
+          body_style_other?: string | null
+          body_styles?: string[]
+          budget?: string | null
+          color?: string | null
+          comments?: string | null
+          created_at?: string
+          deposit_status?: string
+          email: string
+          full_name: string
+          id?: string
+          make_model: string
+          mileage_range?: string | null
+          payment_method: string
+          phone: string
+          status?: string
+          stripe_session_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+          year_range?: string | null
+        }
+        Update: {
+          body_style_other?: string | null
+          body_styles?: string[]
+          budget?: string | null
+          color?: string | null
+          comments?: string | null
+          created_at?: string
+          deposit_status?: string
+          email?: string
+          full_name?: string
+          id?: string
+          make_model?: string
+          mileage_range?: string | null
+          payment_method?: string
+          phone?: string
+          status?: string
+          stripe_session_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+          year_range?: string | null
+        }
+        Relationships: []
+      }
       subscriptions: {
         Row: {
           cancel_at_period_end: boolean | null
