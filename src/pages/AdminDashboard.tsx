@@ -36,9 +36,13 @@ const AdminDashboard = () => {
         </p>
 
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <Link to="/admin/inventory" className="rounded-lg border border-border bg-card p-6 hover:border-primary transition-colors">
+            <h2 className="font-heading text-xl uppercase tracking-wider text-foreground">Inventory</h2>
+            <p className="mt-1 text-sm text-muted-foreground">Manage vehicle listings & run the Integrity Agent.</p>
+          </Link>
           <Link to="/dashboard" className="rounded-lg border border-border bg-card p-6 hover:border-primary transition-colors">
             <h2 className="font-heading text-xl uppercase tracking-wider text-foreground">My Listings</h2>
-            <p className="mt-1 text-sm text-muted-foreground">Manage your vehicle inventory.</p>
+            <p className="mt-1 text-sm text-muted-foreground">Manage your personal inventory.</p>
           </Link>
           <Link to="/admin/affiliates" className="rounded-lg border border-border bg-card p-6 hover:border-primary transition-colors">
             <h2 className="font-heading text-xl uppercase tracking-wider text-foreground">Affiliates</h2>
