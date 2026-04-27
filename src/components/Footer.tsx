@@ -12,6 +12,7 @@ const categoryLinks = [
 
 const companyLinks = [
   { label: "How It Works", to: "/how-it-works" },
+  { label: "Brokers", to: "/broker-network" },
   { label: "About", to: "/about" },
   { label: "Contact", to: "/contact" },
   { label: "Terms of Service", to: "/terms" },
