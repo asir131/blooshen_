@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import SmartSearchBar from "@/components/SmartSearchBar";
 import autowurxLogo from "@/assets/autowurx-logo.png";
-import { Menu, X, Car, Wrench, Store, Key, Users, CalendarDays, Search, LayoutDashboard, HelpCircle } from "lucide-react";
+import { Menu, X, Car, Wrench, Store, Key, Users, CalendarDays, Search, LayoutDashboard, HelpCircle, Briefcase } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
