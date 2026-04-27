@@ -1,8 +1,15 @@
+# Plan: Add "How It Works" navigation links
 
-The user wants to connect their project to Supabase. The project is already on Lovable Cloud (which is managed Supabase under the hood), but they want to connect to their own external Supabase project.
+Surface the existing `/how-it-works` page by adding links in both the top Navbar and the Footer.
 
-This is a configuration change handled through the Lovable UI, not something I can do via code edits. I need to direct the user to the right place.
+## 1. `src/components/Navbar.tsx`
+- **Desktop actions**: Add a `<Button variant="ghost" size="sm" asChild><Link to="/how-it-works">How It Works</Link></Button>` in the desktop action group, placed before "Browse" so it reads naturally.
+- **Mobile drawer**: Add a "How It Works" entry to the mobile menu list (inside the drawer, alongside the other navLinks). Use the `HelpCircle` icon from lucide-react for visual consistency with the other icon-prefixed links.
 
-Per Lovable Cloud guidelines: Cloud cannot be disconnected once added. However, users CAN connect a separate/external Supabase project alongside or in place via the Workspace integrations panel.
+## 2. `src/components/Footer.tsx`
+- Add `{ label: "How It Works", to: "/how-it-works" }` to the `companyLinks` array (placed first, above About). This surfaces the link in the Footer's "COMPANY" column on every page.
 
-I'll keep this short — it's a UI action, not a build task.
+## Notes
+- Route `/how-it-works` is already registered in `src/App.tsx` and the page component exists at `src/pages/HowItWorksPage.tsx` — no routing changes needed.
+- No new dependencies required.
+- Fully responsive: desktop nav, mobile drawer, and footer all covered.
