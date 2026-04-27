@@ -15,7 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Check, X, Loader2, Upload, Star, Trash2, AlertTriangle } from "lucide-react";
+import { Check, X, Loader2, Upload, Star, Trash2, AlertTriangle, Lock } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -26,6 +26,7 @@ import {
   BODY_STYLES,
 } from "@/lib/listingSchema";
 import { cn } from "@/lib/utils";
+import { VinFirstInput, type VinStatus, type DecodedVin } from "@/components/admin/VinFirstInput";
 
 interface ListingFormModalProps {
   open: boolean;
@@ -55,6 +56,7 @@ export function ListingFormModal({ open, onOpenChange, onSaved }: ListingFormMod
   const [images, setImages] = useState<UploadedImage[]>([]);
   const [uploading, setUploading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [vinStatus, setVinStatus] = useState<VinStatus>("idle");
 
   const form = useForm<ListingFormValues>({
     resolver: zodResolver(listingSchema),
@@ -84,8 +86,32 @@ export function ListingFormModal({ open, onOpenChange, onSaved }: ListingFormMod
       setListingId(null);
       setImages([]);
       setTab("info");
+      setVinStatus("idle");
     }
   }, [open, form]);
+
+  // Auto-fill vehicle fields when NHTSA decode succeeds
+  const handleVinDecoded = useCallback(
+    (decoded: DecodedVin) => {
+      setValue("vin", decoded.vin, { shouldValidate: true, shouldDirty: true });
+      if (decoded.make) setValue("make", decoded.make, { shouldValidate: true, shouldDirty: true });
+      if (decoded.model) setValue("model", decoded.model, { shouldValidate: true, shouldDirty: true });
+      if (decoded.year) setValue("year", decoded.year, { shouldValidate: true, shouldDirty: true });
+      // Map NHTSA BodyClass onto our short list when possible
+      if (decoded.body_style) {
+        const match = BODY_STYLES.find((b) =>
+          decoded.body_style!.toLowerCase().includes(b.toLowerCase()),
+        );
+        if (match) setValue("body_style", match, { shouldValidate: true, shouldDirty: true });
+      }
+      toast.success(`VIN decoded: ${decoded.year} ${decoded.make} ${decoded.model}`);
+    },
+    // setValue is stable from RHF
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
+
+  const fieldsLocked = vinStatus !== "success" && vinStatus !== "error-not-found";
 
   // ---- Live validation indicators
   const vinValid = useMemo(() => validateVIN(values.vin || ""), [values.vin]);
@@ -300,148 +326,156 @@ export function ListingFormModal({ open, onOpenChange, onSaved }: ListingFormMod
 
             {/* ---- Tab 1: Info ---- */}
             <TabsContent value="info" className="space-y-4 pt-4">
-              <div className="grid gap-4 md:grid-cols-2">
-                <div>
-                  <Label htmlFor="vin">VIN *</Label>
-                  <div className="relative">
-                    <Input
-                      id="vin"
-                      maxLength={17}
-                      className="font-mono uppercase pr-9 focus-visible:ring-primary"
-                      {...register("vin", {
-                        setValueAs: (v: string) => v.toUpperCase(),
-                      })}
-                    />
-                    {values.vin?.length === 17 && (
-                      <span className="absolute right-2 top-1/2 -translate-y-1/2">
-                        {vinValid ? (
-                          <Check className="h-5 w-5 text-green-500" />
-                        ) : (
-                          <X className="h-5 w-5 text-destructive" />
-                        )}
-                      </span>
+              {/* VIN-first input drives the rest of the form */}
+              <VinFirstInput
+                value={values.vin || ""}
+                onChange={(v) => setValue("vin", v, { shouldValidate: true })}
+                onDecoded={handleVinDecoded}
+                onStatusChange={setVinStatus}
+                ignoreListingId={listingId}
+              />
+              {formState.errors.vin && (
+                <p className="text-sm text-destructive">{formState.errors.vin.message}</p>
+              )}
+
+              {/* Locked-fields banner */}
+              {fieldsLocked && (
+                <div className="flex items-center gap-2 rounded-md border border-border bg-secondary/50 p-3 text-xs text-muted-foreground">
+                  <Lock className="h-3.5 w-3.5" />
+                  Vehicle details unlock once a valid VIN is decoded. NHTSA-decoded fields can still be edited.
+                </div>
+              )}
+
+              <fieldset
+                disabled={fieldsLocked}
+                className={cn(
+                  "space-y-4 transition-opacity",
+                  fieldsLocked && "pointer-events-none opacity-50",
+                )}
+                aria-disabled={fieldsLocked}
+              >
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div>
+                    <Label htmlFor="seller_type">Seller Type *</Label>
+                    <RadioGroup
+                      value={values.seller_type}
+                      onValueChange={(v) => setValue("seller_type", v as ListingFormValues["seller_type"])}
+                      className="mt-2 flex gap-4"
+                    >
+                      {(["dealer", "private", "broker"] as const).map((t) => (
+                        <div key={t} className="flex items-center gap-2">
+                          <RadioGroupItem value={t} id={`st-${t}`} />
+                          <Label htmlFor={`st-${t}`} className="capitalize">{t}</Label>
+                        </div>
+                      ))}
+                    </RadioGroup>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="condition">Condition *</Label>
+                    <Select
+                      value={values.condition}
+                      onValueChange={(v) => setValue("condition", v as ListingFormValues["condition"])}
+                    >
+                      <SelectTrigger className="focus:ring-primary">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="new">New</SelectItem>
+                        <SelectItem value="used">Used</SelectItem>
+                        <SelectItem value="certified">Certified</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="make">Make *</Label>
+                    <Input id="make" className="focus-visible:ring-primary" {...register("make")} />
+                    {formState.errors.make && (
+                      <p className="mt-1 text-sm text-destructive">{formState.errors.make.message}</p>
                     )}
                   </div>
-                  {formState.errors.vin && (
-                    <p className="mt-1 text-sm text-destructive">
-                      {formState.errors.vin.message}
-                    </p>
-                  )}
-                </div>
+                  <div>
+                    <Label htmlFor="model">Model *</Label>
+                    <Input id="model" className="focus-visible:ring-primary" {...register("model")} />
+                    {formState.errors.model && (
+                      <p className="mt-1 text-sm text-destructive">{formState.errors.model.message}</p>
+                    )}
+                  </div>
 
-                <div>
-                  <Label htmlFor="seller_type">Seller Type *</Label>
-                  <RadioGroup
-                    value={values.seller_type}
-                    onValueChange={(v) => setValue("seller_type", v as ListingFormValues["seller_type"])}
-                    className="mt-2 flex gap-4"
-                  >
-                    {(["dealer", "private", "broker"] as const).map((t) => (
-                      <div key={t} className="flex items-center gap-2">
-                        <RadioGroupItem value={t} id={`st-${t}`} />
-                        <Label htmlFor={`st-${t}`} className="capitalize">{t}</Label>
-                      </div>
-                    ))}
-                  </RadioGroup>
-                </div>
+                  <div>
+                    <Label htmlFor="year">Year *</Label>
+                    <Input
+                      id="year"
+                      type="number"
+                      min={1900}
+                      max={2030}
+                      className="focus-visible:ring-primary"
+                      {...register("year", { valueAsNumber: true })}
+                    />
+                    {formState.errors.year && (
+                      <p className="mt-1 text-sm text-destructive">{formState.errors.year.message}</p>
+                    )}
+                  </div>
+                  <div>
+                    <Label htmlFor="mileage">Mileage *</Label>
+                    <Input
+                      id="mileage"
+                      type="number"
+                      min={0}
+                      className="focus-visible:ring-primary"
+                      {...register("mileage", { valueAsNumber: true })}
+                    />
+                    {formState.errors.mileage && (
+                      <p className="mt-1 text-sm text-destructive">{formState.errors.mileage.message}</p>
+                    )}
+                  </div>
 
-                <div>
-                  <Label htmlFor="make">Make *</Label>
-                  <Input id="make" className="focus-visible:ring-primary" {...register("make")} />
-                  {formState.errors.make && (
-                    <p className="mt-1 text-sm text-destructive">{formState.errors.make.message}</p>
-                  )}
-                </div>
-                <div>
-                  <Label htmlFor="model">Model *</Label>
-                  <Input id="model" className="focus-visible:ring-primary" {...register("model")} />
-                  {formState.errors.model && (
-                    <p className="mt-1 text-sm text-destructive">{formState.errors.model.message}</p>
-                  )}
-                </div>
+                  <div>
+                    <Label htmlFor="price">Price (USD) *</Label>
+                    <Input
+                      id="price"
+                      type="number"
+                      min={500}
+                      max={500000}
+                      className="focus-visible:ring-primary"
+                      {...register("price", { valueAsNumber: true })}
+                    />
+                    {formState.errors.price && (
+                      <p className="mt-1 text-sm text-destructive">{formState.errors.price.message}</p>
+                    )}
+                  </div>
+                  <div>
+                    <Label htmlFor="color">Color</Label>
+                    <Input id="color" className="focus-visible:ring-primary" {...register("color")} />
+                  </div>
 
-                <div>
-                  <Label htmlFor="year">Year *</Label>
-                  <Input
-                    id="year"
-                    type="number"
-                    min={1900}
-                    max={2030}
-                    className="focus-visible:ring-primary"
-                    {...register("year", { valueAsNumber: true })}
-                  />
-                  {formState.errors.year && (
-                    <p className="mt-1 text-sm text-destructive">{formState.errors.year.message}</p>
-                  )}
+                  <div>
+                    <Label htmlFor="body_style">Body Style</Label>
+                    <Select
+                      value={values.body_style || ""}
+                      onValueChange={(v) => setValue("body_style", v)}
+                    >
+                      <SelectTrigger className="focus:ring-primary">
+                        <SelectValue placeholder="Select body style" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {BODY_STYLES.map((b) => (
+                          <SelectItem key={b} value={b}>{b}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
-                <div>
-                  <Label htmlFor="mileage">Mileage *</Label>
-                  <Input
-                    id="mileage"
-                    type="number"
-                    min={0}
-                    className="focus-visible:ring-primary"
-                    {...register("mileage", { valueAsNumber: true })}
-                  />
-                  {formState.errors.mileage && (
-                    <p className="mt-1 text-sm text-destructive">{formState.errors.mileage.message}</p>
-                  )}
-                </div>
+              </fieldset>
 
-                <div>
-                  <Label htmlFor="price">Price (USD) *</Label>
-                  <Input
-                    id="price"
-                    type="number"
-                    min={500}
-                    max={500000}
-                    className="focus-visible:ring-primary"
-                    {...register("price", { valueAsNumber: true })}
-                  />
-                  {formState.errors.price && (
-                    <p className="mt-1 text-sm text-destructive">{formState.errors.price.message}</p>
-                  )}
-                </div>
-                <div>
-                  <Label htmlFor="color">Color</Label>
-                  <Input id="color" className="focus-visible:ring-primary" {...register("color")} />
-                </div>
-
-                <div>
-                  <Label htmlFor="body_style">Body Style</Label>
-                  <Select
-                    value={values.body_style || ""}
-                    onValueChange={(v) => setValue("body_style", v)}
-                  >
-                    <SelectTrigger className="focus:ring-primary">
-                      <SelectValue placeholder="Select body style" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {BODY_STYLES.map((b) => (
-                        <SelectItem key={b} value={b}>{b}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <Label htmlFor="condition">Condition *</Label>
-                  <Select
-                    value={values.condition}
-                    onValueChange={(v) => setValue("condition", v as ListingFormValues["condition"])}
-                  >
-                    <SelectTrigger className="focus:ring-primary">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="new">New</SelectItem>
-                      <SelectItem value="used">Used</SelectItem>
-                      <SelectItem value="certified">Certified</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              <div>
+              <fieldset
+                disabled={fieldsLocked}
+                className={cn(
+                  "transition-opacity",
+                  fieldsLocked && "pointer-events-none opacity-50",
+                )}
+              >
                 <Label htmlFor="description">
                   Description * <span className="text-xs text-muted-foreground">
                     ({(values.description || "").length}/100 min)
@@ -458,7 +492,7 @@ export function ListingFormModal({ open, onOpenChange, onSaved }: ListingFormMod
                     {formState.errors.description.message}
                   </p>
                 )}
-              </div>
+              </fieldset>
             </TabsContent>
 
             {/* ---- Tab 2: Images ---- */}
