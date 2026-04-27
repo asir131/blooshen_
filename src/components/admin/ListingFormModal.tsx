@@ -15,7 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Check, X, Loader2, Upload, Star, Trash2, AlertTriangle } from "lucide-react";
+import { Check, X, Loader2, Upload, Star, Trash2, AlertTriangle, Lock } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -26,6 +26,7 @@ import {
   BODY_STYLES,
 } from "@/lib/listingSchema";
 import { cn } from "@/lib/utils";
+import { VinFirstInput, type VinStatus, type DecodedVin } from "@/components/admin/VinFirstInput";
 
 interface ListingFormModalProps {
   open: boolean;
