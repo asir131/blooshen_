@@ -469,7 +469,13 @@ export function ListingFormModal({ open, onOpenChange, onSaved }: ListingFormMod
                 </div>
               </fieldset>
 
-              <div>
+              <fieldset
+                disabled={fieldsLocked}
+                className={cn(
+                  "transition-opacity",
+                  fieldsLocked && "pointer-events-none opacity-50",
+                )}
+              >
                 <Label htmlFor="description">
                   Description * <span className="text-xs text-muted-foreground">
                     ({(values.description || "").length}/100 min)
@@ -486,7 +492,7 @@ export function ListingFormModal({ open, onOpenChange, onSaved }: ListingFormMod
                     {formState.errors.description.message}
                   </p>
                 )}
-              </div>
+              </fieldset>
             </TabsContent>
 
             {/* ---- Tab 2: Images ---- */}
