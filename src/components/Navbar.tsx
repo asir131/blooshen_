@@ -91,6 +91,14 @@ const Navbar = () => {
                 How It Works
               </Link>
               <Link
+                to="/broker-network"
+                onClick={() => setMenuOpen(false)}
+                className="flex items-center gap-3 px-4 py-3 rounded-md text-sm text-foreground hover:bg-secondary transition-colors min-h-[44px]"
+              >
+                <Briefcase className="h-4 w-4 text-primary" />
+                Brokers
+              </Link>
+              <Link
                 to="/dashboard"
                 onClick={() => setMenuOpen(false)}
                 className="flex items-center gap-3 px-4 py-3 rounded-md text-sm text-foreground hover:bg-secondary transition-colors min-h-[44px]"
