@@ -38,6 +38,7 @@ import FindMyBroker from "./pages/FindMyBroker.tsx";
 import BrokerApply from "./pages/BrokerApply.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import OttoLanding from "./pages/OttoLanding.tsx";
+import HowItWorksPage from "./pages/HowItWorksPage.tsx";
 import Pricing from "./pages/Pricing.tsx";
 import CheckoutReturn from "./pages/CheckoutReturn.tsx";
 import Orders from "./pages/Orders.tsx";
@@ -85,6 +86,7 @@ const AppContent = () => {
         <Route path="/find-my-broker" element={<FindMyBroker />} />
         <Route path="/promoters" element={<PromotersLanding />} />
         <Route path="/otto" element={<OttoLanding />} />
+        <Route path="/how-it-works" element={<HowItWorksPage />} />
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/checkout/return" element={<CheckoutReturn />} />
         <Route path="/orders" element={<Orders />} />
