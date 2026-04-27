@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import SmartSearchBar from "@/components/SmartSearchBar";
 import autowurxLogo from "@/assets/autowurx-logo.png";
-import { Menu, X, Car, Wrench, Store, Key, Users, CalendarDays, Search, LayoutDashboard } from "lucide-react";
+import { Menu, X, Car, Wrench, Store, Key, Users, CalendarDays, Search, LayoutDashboard, HelpCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
@@ -33,6 +33,7 @@ const Navbar = () => {
 
           {/* Desktop actions */}
           <div className="hidden md:flex items-center gap-2">
+            <Button variant="ghost" size="sm" asChild><Link to="/how-it-works">How It Works</Link></Button>
             <Button variant="ghost" size="sm" asChild><Link to="/cars-for-sale">Browse</Link></Button>
             <Button variant="ghost" size="sm" asChild><Link to="/orders">Special Order</Link></Button>
             <Button variant="ghost" size="sm">Sell</Button>
@@ -82,6 +83,14 @@ const Navbar = () => {
                 </Link>
               ))}
               <div className="border-t border-border my-3" />
+              <Link
+                to="/how-it-works"
+                onClick={() => setMenuOpen(false)}
+                className="flex items-center gap-3 px-4 py-3 rounded-md text-sm text-foreground hover:bg-secondary transition-colors min-h-[44px]"
+              >
+                <HelpCircle className="h-4 w-4 text-primary" />
+                How It Works
+              </Link>
               <Link
                 to="/dashboard"
                 onClick={() => setMenuOpen(false)}
