@@ -86,8 +86,32 @@ export function ListingFormModal({ open, onOpenChange, onSaved }: ListingFormMod
       setListingId(null);
       setImages([]);
       setTab("info");
+      setVinStatus("idle");
     }
   }, [open, form]);
+
+  // Auto-fill vehicle fields when NHTSA decode succeeds
+  const handleVinDecoded = useCallback(
+    (decoded: DecodedVin) => {
+      setValue("vin", decoded.vin, { shouldValidate: true, shouldDirty: true });
+      if (decoded.make) setValue("make", decoded.make, { shouldValidate: true, shouldDirty: true });
+      if (decoded.model) setValue("model", decoded.model, { shouldValidate: true, shouldDirty: true });
+      if (decoded.year) setValue("year", decoded.year, { shouldValidate: true, shouldDirty: true });
+      // Map NHTSA BodyClass onto our short list when possible
+      if (decoded.body_style) {
+        const match = BODY_STYLES.find((b) =>
+          decoded.body_style!.toLowerCase().includes(b.toLowerCase()),
+        );
+        if (match) setValue("body_style", match, { shouldValidate: true, shouldDirty: true });
+      }
+      toast.success(`VIN decoded: ${decoded.year} ${decoded.make} ${decoded.model}`);
+    },
+    // setValue is stable from RHF
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
+
+  const fieldsLocked = vinStatus !== "success" && vinStatus !== "error-not-found";
 
   // ---- Live validation indicators
   const vinValid = useMemo(() => validateVIN(values.vin || ""), [values.vin]);
