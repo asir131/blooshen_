@@ -397,121 +397,100 @@ export function ListingFormModal({ open, onOpenChange, onSaved }: ListingFormMod
 
               {/* Locked-fields banner */}
               {fieldsLocked && (
-                <div className="flex items-center gap-2 rounded-md border border-border bg-secondary/50 p-3 text-xs text-muted-foreground">
+                <div className="flex items-center gap-2 rounded-md border border-amber-500/40 bg-amber-500/10 p-3 text-xs text-amber-300">
                   <Lock className="h-3.5 w-3.5" />
-                  Vehicle details unlock once a valid VIN is decoded. NHTSA-decoded fields can still be edited.
+                  Enter a valid VIN above to unlock and auto-fill vehicle details.
                 </div>
               )}
 
-              <fieldset
-                disabled={fieldsLocked}
-                className={cn(
-                  "space-y-4 transition-opacity",
-                  fieldsLocked && "pointer-events-none opacity-50",
-                )}
-                aria-disabled={fieldsLocked}
-              >
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div>
-                    <Label htmlFor="seller_type">Seller Type *</Label>
-                    <RadioGroup
-                      value={values.seller_type}
-                      onValueChange={(v) => setValue("seller_type", v as ListingFormValues["seller_type"])}
-                      className="mt-2 flex gap-4"
-                    >
-                      {(["dealer", "private", "broker"] as const).map((t) => (
-                        <div key={t} className="flex items-center gap-2">
-                          <RadioGroupItem value={t} id={`st-${t}`} />
-                          <Label htmlFor={`st-${t}`} className="capitalize">{t}</Label>
-                        </div>
-                      ))}
-                    </RadioGroup>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="condition">Condition *</Label>
-                    <Select
-                      value={values.condition}
-                      onValueChange={(v) => setValue("condition", v as ListingFormValues["condition"])}
-                    >
-                      <SelectTrigger className="focus:ring-primary">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="new">New</SelectItem>
-                        <SelectItem value="used">Used</SelectItem>
-                        <SelectItem value="certified">Certified</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="make">Make *</Label>
-                    <Input id="make" className="focus-visible:ring-primary" {...register("make")} />
-                    {formState.errors.make && (
-                      <p className="mt-1 text-sm text-destructive">{formState.errors.make.message}</p>
-                    )}
-                  </div>
-                  <div>
-                    <Label htmlFor="model">Model *</Label>
-                    <Input id="model" className="focus-visible:ring-primary" {...register("model")} />
-                    {formState.errors.model && (
-                      <p className="mt-1 text-sm text-destructive">{formState.errors.model.message}</p>
-                    )}
-                  </div>
-
-                  <div>
-                    <Label htmlFor="year">Year *</Label>
+              {/* === Group 1: Core Identity === */}
+              <div className="grid gap-4 md:grid-cols-2">
+                <AutoFillField
+                  name="year"
+                  label="Year"
+                  required
+                  locked={fieldsLocked}
+                  state={fillStateFor("year", true)}
+                >
+                  {({ flashClassName }) => (
                     <Input
                       id="year"
                       type="number"
                       min={1900}
                       max={2030}
-                      className="focus-visible:ring-primary"
-                      {...register("year", { valueAsNumber: true })}
+                      className={cn("focus-visible:ring-primary", flashClassName)}
+                      {...register("year", {
+                        valueAsNumber: true,
+                        onChange: () => trackEdit("year"),
+                      })}
                     />
-                    {formState.errors.year && (
-                      <p className="mt-1 text-sm text-destructive">{formState.errors.year.message}</p>
-                    )}
-                  </div>
-                  <div>
-                    <Label htmlFor="mileage">Mileage *</Label>
-                    <Input
-                      id="mileage"
-                      type="number"
-                      min={0}
-                      className="focus-visible:ring-primary"
-                      {...register("mileage", { valueAsNumber: true })}
-                    />
-                    {formState.errors.mileage && (
-                      <p className="mt-1 text-sm text-destructive">{formState.errors.mileage.message}</p>
-                    )}
-                  </div>
+                  )}
+                </AutoFillField>
 
-                  <div>
-                    <Label htmlFor="price">Price (USD) *</Label>
+                <AutoFillField
+                  name="make"
+                  label="Make"
+                  required
+                  locked={fieldsLocked}
+                  state={fillStateFor("make", true)}
+                >
+                  {({ flashClassName }) => (
                     <Input
-                      id="price"
-                      type="number"
-                      min={500}
-                      max={500000}
-                      className="focus-visible:ring-primary"
-                      {...register("price", { valueAsNumber: true })}
+                      id="make"
+                      className={cn("focus-visible:ring-primary", flashClassName)}
+                      {...register("make", { onChange: () => trackEdit("make") })}
                     />
-                    {formState.errors.price && (
-                      <p className="mt-1 text-sm text-destructive">{formState.errors.price.message}</p>
-                    )}
-                  </div>
-                  <div>
-                    <Label htmlFor="color">Color</Label>
-                    <Input id="color" className="focus-visible:ring-primary" {...register("color")} />
-                  </div>
+                  )}
+                </AutoFillField>
 
-                  <div>
-                    <Label htmlFor="body_style">Body Style</Label>
+                <AutoFillField
+                  name="model"
+                  label="Model"
+                  required
+                  locked={fieldsLocked}
+                  state={fillStateFor("model", true)}
+                >
+                  {({ flashClassName }) => (
+                    <Input
+                      id="model"
+                      className={cn("focus-visible:ring-primary", flashClassName)}
+                      {...register("model", { onChange: () => trackEdit("model") })}
+                    />
+                  )}
+                </AutoFillField>
+
+                <AutoFillField
+                  name="trim"
+                  label="Trim / Series"
+                  locked={fieldsLocked}
+                  state={extra.trim ? "autofilled" : "manual"}
+                >
+                  {({ flashClassName }) => (
+                    <Input
+                      id="trim"
+                      defaultValue={extra.trim ?? ""}
+                      onChange={(e) => setExtra((p) => ({ ...p, trim: e.target.value }))}
+                      className={cn("focus-visible:ring-primary", flashClassName)}
+                    />
+                  )}
+                </AutoFillField>
+              </div>
+
+              {/* === Group 2: Body & Style === */}
+              <div className="grid gap-4 md:grid-cols-2">
+                <AutoFillField
+                  name="body_style"
+                  label="Body Style"
+                  locked={fieldsLocked}
+                  state={fillStateFor("body_style")}
+                >
+                  {() => (
                     <Select
                       value={values.body_style || ""}
-                      onValueChange={(v) => setValue("body_style", v)}
+                      onValueChange={(v) => {
+                        setValue("body_style", v);
+                        trackEdit("body_style");
+                      }}
                     >
                       <SelectTrigger className="focus:ring-primary">
                         <SelectValue placeholder="Select body style" />
@@ -522,19 +501,237 @@ export function ListingFormModal({ open, onOpenChange, onSaved }: ListingFormMod
                         ))}
                       </SelectContent>
                     </Select>
-                  </div>
-                </div>
-              </fieldset>
+                  )}
+                </AutoFillField>
 
-              <fieldset
-                disabled={fieldsLocked}
-                className={cn(
-                  "transition-opacity",
-                  fieldsLocked && "pointer-events-none opacity-50",
+                <AutoFillField
+                  name="drivetrain"
+                  label="Drive Type"
+                  locked={fieldsLocked}
+                  state={extra.drivetrain ? "autofilled" : "manual"}
+                >
+                  {() => (
+                    <Select
+                      value={extra.drivetrain || ""}
+                      onValueChange={(v) => setExtra((p) => ({ ...p, drivetrain: v }))}
+                    >
+                      <SelectTrigger className="focus:ring-primary">
+                        <SelectValue placeholder="Select drive type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {["FWD", "RWD", "AWD", "4WD"].map((d) => (
+                          <SelectItem key={d} value={d}>{d}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                </AutoFillField>
+
+                <AutoFillField
+                  name="doors"
+                  label="Doors"
+                  locked={fieldsLocked}
+                  state={extra.doors ? "autofilled" : "manual"}
+                >
+                  {({ flashClassName }) => (
+                    <Input
+                      id="doors"
+                      type="number"
+                      min={1}
+                      max={6}
+                      defaultValue={extra.doors ?? ""}
+                      onChange={(e) => setExtra((p) => ({ ...p, doors: e.target.value }))}
+                      className={cn("focus-visible:ring-primary", flashClassName)}
+                    />
+                  )}
+                </AutoFillField>
+
+                <AutoFillField
+                  name="color"
+                  label="Color"
+                  locked={fieldsLocked}
+                  state={fillStateFor("color")}
+                  helper="Color is not derived from VIN — enter manually."
+                >
+                  {({ flashClassName }) => (
+                    <Input
+                      id="color"
+                      className={cn("focus-visible:ring-primary", flashClassName)}
+                      {...register("color", { onChange: () => trackEdit("color") })}
+                    />
+                  )}
+                </AutoFillField>
+              </div>
+
+              {/* === Group 3: Powertrain === */}
+              <div className="grid gap-4 md:grid-cols-2">
+                <AutoFillField
+                  name="engine"
+                  label="Engine"
+                  locked={fieldsLocked}
+                  state={extra.engine ? "autofilled" : "manual"}
+                >
+                  {({ flashClassName }) => (
+                    <Input
+                      id="engine"
+                      defaultValue={extra.engine ?? ""}
+                      onChange={(e) => setExtra((p) => ({ ...p, engine: e.target.value }))}
+                      className={cn("focus-visible:ring-primary", flashClassName)}
+                      placeholder="e.g. 2.5L 4-Cylinder"
+                    />
+                  )}
+                </AutoFillField>
+
+                <AutoFillField
+                  name="fuel_type"
+                  label="Fuel Type"
+                  locked={fieldsLocked}
+                  state={extra.fuel_type ? "autofilled" : "manual"}
+                >
+                  {() => (
+                    <Select
+                      value={extra.fuel_type || ""}
+                      onValueChange={(v) => setExtra((p) => ({ ...p, fuel_type: v }))}
+                    >
+                      <SelectTrigger className="focus:ring-primary">
+                        <SelectValue placeholder="Select fuel type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {["Gasoline", "Diesel", "Electric", "Hybrid", "Plug-in Hybrid"].map((f) => (
+                          <SelectItem key={f} value={f}>{f}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                </AutoFillField>
+
+                <AutoFillField
+                  name="transmission"
+                  label="Transmission"
+                  locked={fieldsLocked}
+                  state={extra.transmission ? "autofilled" : "manual"}
+                >
+                  {() => (
+                    <Select
+                      value={extra.transmission || ""}
+                      onValueChange={(v) => setExtra((p) => ({ ...p, transmission: v }))}
+                    >
+                      <SelectTrigger className="focus:ring-primary">
+                        <SelectValue placeholder="Select transmission" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {["Automatic", "Manual", "CVT"].map((t) => (
+                          <SelectItem key={t} value={t}>{t}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                </AutoFillField>
+
+                {(extra.fuel_type === "Electric" ||
+                  extra.fuel_type === "Hybrid" ||
+                  extra.fuel_type === "Plug-in Hybrid" ||
+                  extra.ev_type) && (
+                  <AutoFillField
+                    name="ev_type"
+                    label="EV Type"
+                    locked={fieldsLocked}
+                    state={extra.ev_type ? "autofilled" : "manual"}
+                  >
+                    {() => (
+                      <Select
+                        value={extra.ev_type || ""}
+                        onValueChange={(v) => setExtra((p) => ({ ...p, ev_type: v }))}
+                      >
+                        <SelectTrigger className="focus:ring-primary">
+                          <SelectValue placeholder="Select EV type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {["BEV", "PHEV", "HEV"].map((e) => (
+                            <SelectItem key={e} value={e}>{e}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  </AutoFillField>
                 )}
-              >
-                <Label htmlFor="description">
-                  Description * <span className="text-xs text-muted-foreground">
+              </div>
+
+              {/* === Group 4: Listing-specific (always manual) === */}
+              <div className="grid gap-4 md:grid-cols-2">
+                <div>
+                  <Label htmlFor="mileage" className="text-xs font-heading uppercase tracking-wider">
+                    Mileage <span className="text-primary">*</span>
+                  </Label>
+                  <Input
+                    id="mileage"
+                    type="number"
+                    min={0}
+                    className="focus-visible:ring-primary"
+                    {...register("mileage", { valueAsNumber: true })}
+                  />
+                  {formState.errors.mileage && (
+                    <p className="mt-1 text-sm text-destructive">{formState.errors.mileage.message}</p>
+                  )}
+                </div>
+                <div>
+                  <Label htmlFor="price" className="text-xs font-heading uppercase tracking-wider">
+                    Price (USD) <span className="text-primary">*</span>
+                  </Label>
+                  <Input
+                    id="price"
+                    type="number"
+                    min={500}
+                    max={500000}
+                    className="focus-visible:ring-primary"
+                    {...register("price", { valueAsNumber: true })}
+                  />
+                  {formState.errors.price && (
+                    <p className="mt-1 text-sm text-destructive">{formState.errors.price.message}</p>
+                  )}
+                </div>
+                <div>
+                  <Label htmlFor="condition" className="text-xs font-heading uppercase tracking-wider">
+                    Condition <span className="text-primary">*</span>
+                  </Label>
+                  <Select
+                    value={values.condition}
+                    onValueChange={(v) => setValue("condition", v as ListingFormValues["condition"])}
+                  >
+                    <SelectTrigger className="focus:ring-primary">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="new">New</SelectItem>
+                      <SelectItem value="used">Used</SelectItem>
+                      <SelectItem value="certified">Certified Pre-Owned</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label htmlFor="seller_type" className="text-xs font-heading uppercase tracking-wider">
+                    Seller Type <span className="text-primary">*</span>
+                  </Label>
+                  <RadioGroup
+                    value={values.seller_type}
+                    onValueChange={(v) => setValue("seller_type", v as ListingFormValues["seller_type"])}
+                    className="mt-2 flex gap-4"
+                  >
+                    {(["dealer", "private", "broker"] as const).map((t) => (
+                      <div key={t} className="flex items-center gap-2">
+                        <RadioGroupItem value={t} id={`st-${t}`} />
+                        <Label htmlFor={`st-${t}`} className="capitalize">{t}</Label>
+                      </div>
+                    ))}
+                  </RadioGroup>
+                </div>
+              </div>
+
+              {/* === Group 5: Description === */}
+              <div className="space-y-1">
+                <Label htmlFor="description" className="text-xs font-heading uppercase tracking-wider">
+                  Description <span className="text-primary">*</span>{" "}
+                  <span className="text-xs text-muted-foreground">
                     ({(values.description || "").length}/100 min)
                   </span>
                 </Label>
@@ -549,7 +746,7 @@ export function ListingFormModal({ open, onOpenChange, onSaved }: ListingFormMod
                     {formState.errors.description.message}
                   </p>
                 )}
-              </fieldset>
+              </div>
             </TabsContent>
 
             {/* ---- Tab 2: Images ---- */}
