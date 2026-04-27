@@ -48,6 +48,7 @@ import AdminLogin from "./pages/AdminLogin.tsx";
 import AdminDashboard from "./pages/AdminDashboard.tsx";
 import AdminMaster from "./pages/AdminMaster.tsx";
 import AdminInventory from "./pages/AdminInventory.tsx";
+import AdminRedirect from "./pages/AdminRedirect.tsx";
 import AdminUsers from "./pages/AdminUsers.tsx";
 import AdminAlerts from "./pages/AdminAlerts.tsx";
 import AdminAudit from "./pages/AdminAudit.tsx";
@@ -91,6 +92,7 @@ const AppContent = () => {
         <Route path="/auth" element={<Auth />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin" element={<AdminRedirect />} />
         <Route
           path="/admin/dashboard"
           element={
@@ -109,6 +111,22 @@ const AppContent = () => {
         />
         <Route
           path="/admin/inventory"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminInventory />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/inventory/new"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminInventory />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/inventory/:id"
           element={
             <ProtectedRoute requiredRole="admin">
               <AdminInventory />

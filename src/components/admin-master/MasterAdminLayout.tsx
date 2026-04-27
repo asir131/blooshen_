@@ -1,18 +1,20 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { LogOut } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
+import { IntegrityAgentWidget } from "@/components/admin/IntegrityAgentWidget";
 
 const tabs = [
-  { to: "/admin/master", label: "Dashboard", end: true },
-  { to: "/admin/inventory", label: "Inventory" },
-  { to: "/admin/users", label: "Users" },
-  { to: "/admin/alerts", label: "Alerts" },
-  { to: "/admin/audit", label: "Audit Log" },
-  { to: "/admin/settings", label: "Settings" },
+  { to: "/admin/master", label: "Dashboard", end: true, key: "dashboard" },
+  { to: "/admin/inventory", label: "Inventory", key: "inventory" },
+  { to: "/admin/users", label: "Users", key: "users" },
+  { to: "/admin/alerts", label: "Alerts", key: "alerts" },
+  { to: "/admin/audit", label: "Audit Log", key: "audit" },
+  { to: "/admin/settings", label: "Settings", key: "settings" },
 ];
 
 interface Props {
@@ -20,8 +22,9 @@ interface Props {
 }
 
 const MasterAdminLayout = ({ children }: Props) => {
-  const { profile, signOut } = useAuth();
+  const { profile, signOut, role } = useAuth();
   const navigate = useNavigate();
+  const [openAlerts, setOpenAlerts] = useState(0);
 
   const initials = (profile?.full_name ?? profile?.display_name ?? profile?.email ?? "AW")
     .split(" ")
@@ -30,9 +33,39 @@ const MasterAdminLayout = ({ children }: Props) => {
     .join("")
     .toUpperCase();
 
+  useEffect(() => {
+    const load = async () => {
+      const { count } = await supabase
+        .from("system_alerts")
+        .select("id", { count: "exact", head: true })
+        .eq("is_resolved", false);
+      setOpenAlerts(count ?? 0);
+    };
+    load();
+    const channel = supabase
+      .channel("master-layout-alerts")
+      .on("postgres_changes", { event: "*", schema: "public", table: "system_alerts" }, load)
+      .subscribe();
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
   const handleSignOut = async () => {
     await signOut();
     navigate("/admin/login");
+  };
+
+  const renderTabLabel = (label: string, key: string) => {
+    if (key !== "alerts" || openAlerts === 0) return label;
+    return (
+      <span className="flex items-center gap-2">
+        {label}
+        <span className="rounded-full bg-destructive px-1.5 text-[10px] font-bold text-destructive-foreground">
+          {openAlerts > 99 ? "99+" : openAlerts}
+        </span>
+      </span>
+    );
   };
 
   return (
@@ -64,7 +97,7 @@ const MasterAdminLayout = ({ children }: Props) => {
                   )
                 }
               >
-                {tab.label}
+                {renderTabLabel(tab.label, tab.key)}
               </NavLink>
             ))}
           </nav>
@@ -73,9 +106,16 @@ const MasterAdminLayout = ({ children }: Props) => {
             <Avatar className="h-8 w-8">
               <AvatarFallback className="bg-primary/10 text-xs text-primary">{initials}</AvatarFallback>
             </Avatar>
-            <span className="hidden sm:inline text-sm text-muted-foreground">
-              {profile?.full_name ?? profile?.display_name ?? "Admin"}
-            </span>
+            <div className="hidden sm:flex flex-col text-right leading-tight">
+              <span className="text-sm text-foreground">
+                {profile?.full_name ?? profile?.display_name ?? "Admin"}
+              </span>
+              {role && (
+                <span className="text-[10px] uppercase tracking-wider text-primary">
+                  {role.replace("_", " ")}
+                </span>
+              )}
+            </div>
             <Button variant="ghost" size="sm" onClick={handleSignOut}>
               <LogOut className="mr-2 h-4 w-4" />
               Sign out
@@ -97,13 +137,15 @@ const MasterAdminLayout = ({ children }: Props) => {
                 )
               }
             >
-              {tab.label}
+              {renderTabLabel(tab.label, tab.key)}
             </NavLink>
           ))}
         </nav>
       </header>
 
       <main className="container py-6">{children}</main>
+
+      <IntegrityAgentWidget />
     </div>
   );
 };
