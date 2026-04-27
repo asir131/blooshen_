@@ -39,6 +39,7 @@ import BrokerApply from "./pages/BrokerApply.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import OttoLanding from "./pages/OttoLanding.tsx";
 import HowItWorksPage from "./pages/HowItWorksPage.tsx";
+import BrokerNetworkPage from "./pages/BrokerNetworkPage.tsx";
 import Pricing from "./pages/Pricing.tsx";
 import CheckoutReturn from "./pages/CheckoutReturn.tsx";
 import Orders from "./pages/Orders.tsx";
@@ -87,6 +88,7 @@ const AppContent = () => {
         <Route path="/promoters" element={<PromotersLanding />} />
         <Route path="/otto" element={<OttoLanding />} />
         <Route path="/how-it-works" element={<HowItWorksPage />} />
+        <Route path="/broker-network" element={<BrokerNetworkPage />} />
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/checkout/return" element={<CheckoutReturn />} />
         <Route path="/orders" element={<Orders />} />
