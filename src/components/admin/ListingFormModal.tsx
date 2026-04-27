@@ -59,6 +59,12 @@ export function ListingFormModal({ open, onOpenChange, onSaved }: ListingFormMod
   const [uploading, setUploading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [vinStatus, setVinStatus] = useState<VinStatus>("idle");
+  /** Field keys that were populated by the VIN decoder. */
+  const [autofilledFields, setAutofilledFields] = useState<Set<string>>(new Set());
+  /** Field keys the user has manually edited after auto-fill. */
+  const [editedFields, setEditedFields] = useState<Set<string>>(new Set());
+  /** Extra decoded fields we don't write to vehicle_listings columns. */
+  const [extra, setExtra] = useState<Partial<DecodedVehicleData>>({});
 
   const form = useForm<ListingFormValues>({
     resolver: zodResolver(listingSchema),
@@ -89,29 +95,78 @@ export function ListingFormModal({ open, onOpenChange, onSaved }: ListingFormMod
       setImages([]);
       setTab("info");
       setVinStatus("idle");
+      setAutofilledFields(new Set());
+      setEditedFields(new Set());
+      setExtra({});
     }
   }, [open, form]);
 
   // Auto-fill vehicle fields when NHTSA decode succeeds
   const handleVinDecoded = useCallback(
-    (decoded: DecodedVin) => {
-      setValue("vin", decoded.vin, { shouldValidate: true, shouldDirty: true });
-      if (decoded.make) setValue("make", decoded.make, { shouldValidate: true, shouldDirty: true });
-      if (decoded.model) setValue("model", decoded.model, { shouldValidate: true, shouldDirty: true });
-      if (decoded.year) setValue("year", decoded.year, { shouldValidate: true, shouldDirty: true });
-      // Map NHTSA BodyClass onto our short list when possible
+    (decoded: DecodedVehicleData) => {
+      const filled = new Set<string>();
+      const fields: Array<[keyof ListingFormValues, unknown]> = [
+        ["vin", decoded.vin],
+        ["year", decoded.year],
+        ["make", decoded.make],
+        ["model", decoded.model],
+      ];
+      // Map body_style if NHTSA returned one we recognize
       if (decoded.body_style) {
         const match = BODY_STYLES.find((b) =>
           decoded.body_style!.toLowerCase().includes(b.toLowerCase()),
         );
-        if (match) setValue("body_style", match, { shouldValidate: true, shouldDirty: true });
+        if (match) fields.push(["body_style", match]);
       }
-      toast.success(`VIN decoded: ${decoded.year} ${decoded.make} ${decoded.model}`);
+      // Stagger field fills with 80ms delay so the flash animation reads top→bottom.
+      fields.forEach(([key, value], idx) => {
+        if (value === undefined || value === null || value === "") return;
+        setTimeout(() => {
+          setValue(key, value as never, { shouldValidate: true, shouldDirty: false });
+          filled.add(key as string);
+          setAutofilledFields((prev) => new Set(prev).add(key as string));
+        }, idx * 80);
+      });
+      // Persist the extra decoded data (trim, drivetrain, fuel, etc.) for the review step
+      setExtra({
+        trim: decoded.trim,
+        drivetrain: decoded.drivetrain,
+        engine: decoded.engine,
+        fuel_type: decoded.fuel_type,
+        transmission: decoded.transmission,
+        doors: decoded.doors,
+        ev_type: decoded.ev_type,
+        manufactured_in: decoded.manufactured_in,
+      });
+      const summary = [decoded.year, decoded.make, decoded.model].filter(Boolean).join(" ");
+      toast.success(`VIN decoded${summary ? `: ${summary}` : ""}`);
     },
     // setValue is stable from RHF
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
+
+  /** Tracks edits to autofilled fields so we can show the amber "Edited" badge. */
+  const trackEdit = useCallback(
+    (key: string) => {
+      if (autofilledFields.has(key)) {
+        setEditedFields((prev) => {
+          const next = new Set(prev);
+          next.add(key);
+          return next;
+        });
+      }
+    },
+    [autofilledFields],
+  );
+
+  const fillStateFor = (key: keyof ListingFormValues, required = false): FieldFillState =>
+    deriveFillState({
+      hasValue: !!values[key] || values[key] === 0,
+      wasAutofilled: autofilledFields.has(key),
+      edited: editedFields.has(key),
+      required,
+    });
 
   const fieldsLocked = vinStatus !== "success" && vinStatus !== "error-not-found";
 
