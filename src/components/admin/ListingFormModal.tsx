@@ -56,6 +56,7 @@ export function ListingFormModal({ open, onOpenChange, onSaved }: ListingFormMod
   const [images, setImages] = useState<UploadedImage[]>([]);
   const [uploading, setUploading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [vinStatus, setVinStatus] = useState<VinStatus>("idle");
 
   const form = useForm<ListingFormValues>({
     resolver: zodResolver(listingSchema),
