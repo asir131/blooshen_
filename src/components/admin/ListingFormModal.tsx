@@ -26,7 +26,9 @@ import {
   BODY_STYLES,
 } from "@/lib/listingSchema";
 import { cn } from "@/lib/utils";
-import { VinFirstInput, type VinStatus, type DecodedVin } from "@/components/admin/VinFirstInput";
+import { VinFirstInput, type VinStatus } from "@/components/admin/VinFirstInput";
+import { AutoFillField, deriveFillState, type FieldFillState } from "@/components/admin/AutoFillField";
+import type { DecodedVehicleData } from "@/hooks/useVinDecode";
 
 interface ListingFormModalProps {
   open: boolean;
