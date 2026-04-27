@@ -40,6 +40,7 @@ import NotFound from "./pages/NotFound.tsx";
 import OttoLanding from "./pages/OttoLanding.tsx";
 import HowItWorksPage from "./pages/HowItWorksPage.tsx";
 import BrokerNetworkPage from "./pages/BrokerNetworkPage.tsx";
+import AIFeaturesPage from "./pages/AIFeaturesPage.tsx";
 import Pricing from "./pages/Pricing.tsx";
 import CheckoutReturn from "./pages/CheckoutReturn.tsx";
 import Orders from "./pages/Orders.tsx";
@@ -89,6 +90,7 @@ const AppContent = () => {
         <Route path="/otto" element={<OttoLanding />} />
         <Route path="/how-it-works" element={<HowItWorksPage />} />
         <Route path="/broker-network" element={<BrokerNetworkPage />} />
+        <Route path="/ai-features" element={<AIFeaturesPage />} />
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/checkout/return" element={<CheckoutReturn />} />
         <Route path="/orders" element={<Orders />} />
